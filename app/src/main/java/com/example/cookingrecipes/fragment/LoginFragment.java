@@ -1,6 +1,5 @@
 package com.example.cookingrecipes.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,10 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cookingrecipes.R;
-import com.example.cookingrecipes.activity.MainActivity;
-import com.example.cookingrecipes.logic.SessionManagementUtil;
 import com.example.cookingrecipes.logic.VerifyUser;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
+import com.example.cookingrecipes.view_model.VMUserLoginRepository;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,12 +36,16 @@ public class LoginFragment extends Fragment {
 
     private VerifyUser verifyUser;
     private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
+    private VMUserLoginRepository vmUserLoginRepository;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         this.vmFoodBannerRepositoryBridge = new ViewModelProvider(requireActivity()).get(VMFoodBannerRepositoryBridge.class);
+        this.vmUserLoginRepository = new ViewModelProvider(requireActivity()).get(VMUserLoginRepository.class);
+        this.vmUserLoginRepository.setContext(requireContext());
+
         this.verifyUser = new VerifyUser();
     }
 
@@ -68,6 +70,8 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.ivLoginPicture.setImageResource(R.drawable.ribbon);
+
+        vmFoodBannerRepositoryBridge.clearTable();
         this.initOnClick();
     }
 
@@ -77,24 +81,13 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                if(verifyUser.isValid(etUsername.getText().toString(), etPassword.getText().toString())) {
-                    SessionManagementUtil.getInstance().startUserSession(requireContext(), 5);
-                    clearFoodTable();
-                    changeToHomeActivity();
-                }
-                else{
-                    tvInvalidUser.setText("Invalid User ID");
-                    tvInvalidUser.setVisibility(View.VISIBLE);
-                }
+                String username = etUsername.getText().toString();
+                String password = etPassword.getText().toString();
+
+                vmUserLoginRepository.loginProcess(username,password);
             }
         });
 
-    }
-
-    public void changeToHomeActivity(){
-        Intent intent = new Intent(this.requireContext(), MainActivity.class);
-        intent.putExtra("loginUser", this.etUsername.getText().toString());
-        startActivity(intent);
     }
 
     private void clearFoodTable(){

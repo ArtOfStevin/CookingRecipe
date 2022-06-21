@@ -61,11 +61,16 @@ public class UserDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String loginUser = requireActivity().getIntent().getStringExtra("loginUser");
-        this.tvUsernameCenter.setText(loginUser);
-        this.tvUsername.setText(loginUser);
+        String loginUserName = requireActivity().getIntent().getStringExtra("login_username");
+        String loginFullName = requireActivity().getIntent().getStringExtra("login_fullname");
+        String loginEmail = requireActivity().getIntent().getStringExtra("login_email");
+        String loginAvatar = requireActivity().getIntent().getStringExtra("login_avatar");
 
-        inquiryByUsername(loginUser);
+        this.tvUsernameCenter.setText(loginFullName);
+        this.tvUsername.setText(loginUserName);
+        this.tvEmail.setText(loginEmail);
+
+        inquiryByUsername(loginUserName);
     }
 
     private void setBtnLogout(){
@@ -86,7 +91,6 @@ public class UserDetailFragment extends Fragment {
 
     private void toLoginScreen(){
         Intent intent = new Intent(this.requireContext(), LoginActivity.class);
-        intent.putExtra("loginUser", this.tvUsername.getText().toString());
         startActivity(intent);
     }
 

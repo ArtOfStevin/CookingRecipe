@@ -43,7 +43,7 @@ public class VMFoodBannerRepositoryBridge extends AndroidViewModel {
         this.foodApi.getNewRecipes().enqueue(new Callback<ResponseFromFoodApi>() {
             @Override
             public void onResponse(Call<ResponseFromFoodApi> call, Response<ResponseFromFoodApi> response) {
-                Log.d("onResponse","Berhasil");
+                Log.d("foodApi.getNewRecipes.onResponse","Berhasil");
                 ResponseFromFoodApi responseFromFoodApi = response.body();
                 List<FoodBannerFromApi> foodBannerlist = responseFromFoodApi.getFoodBannerlist();
 
@@ -52,8 +52,7 @@ public class VMFoodBannerRepositoryBridge extends AndroidViewModel {
 
             @Override
             public void onFailure(Call<ResponseFromFoodApi> call, Throwable t) {
-                Log.d("onFailure","Gagal");
-                t.printStackTrace();
+                Log.d("foodApi.getNewRecipes.onFailure","Gagal");
             }
         });
     }
