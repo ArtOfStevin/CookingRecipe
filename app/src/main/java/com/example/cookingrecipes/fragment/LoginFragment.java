@@ -13,9 +13,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.activity.MainActivity;
+import com.example.cookingrecipes.logic.SessionManagementUtil;
+import com.example.cookingrecipes.logic.VerifyUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,10 +32,15 @@ public class LoginFragment extends Fragment {
     private Button btnSignUp;
     private Button btnLogin;
     private ImageView ivLoginPicture;
+    private TextView tvInvalidUser;
+
+    private VerifyUser verifyUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.verifyUser = new VerifyUser();
     }
 
     @Override
@@ -47,6 +55,7 @@ public class LoginFragment extends Fragment {
         this.btnSignUp = fragmentView.findViewById(R.id.btnSignUp);
         this.btnLogin = fragmentView.findViewById(R.id.btnLogin);
         this.ivLoginPicture = fragmentView.findViewById(R.id.ivLoginPicture);
+        this.tvInvalidUser = fragmentView.findViewById(R.id.tvInvalidUser);
 
         return fragmentView;
     }
@@ -61,12 +70,16 @@ public class LoginFragment extends Fragment {
     public void initOnClick(){
 
         this.btnLogin.setOnClickListener(new View.OnClickListener() {
-            private boolean isValid = true;
 
             @Override
             public void onClick(View v) {
-                if(isValid) {
+                if(verifyUser.isValid(etUsername.getText().toString(), etPassword.getText().toString())) {
+                    SessionManagementUtil.getInstance().startUserSession(requireContext(), 30);
                     changeToHomeActivity();
+                }
+                else{
+                    tvInvalidUser.setText("Invalid User ID");
+                    tvInvalidUser.setVisibility(View.VISIBLE);
                 }
             }
         });

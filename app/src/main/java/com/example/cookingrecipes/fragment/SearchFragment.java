@@ -32,12 +32,12 @@ import java.util.List;
  */
 public class SearchFragment extends Fragment {
 
-    List<FoodBanner> foodBannerList = new ArrayList<>();
-    RVAdapterFoodBanner rvAdapterFoodBanner;
-    RecyclerView rvHolderSearch;
+    private List<FoodBanner> foodBannerList = new ArrayList<>();
+    private RVAdapterFoodBanner rvAdapterFoodBanner;
+    private RecyclerView rvHolderSearch;
 
-    Button btnSearch;
-    EditText etSearch;
+    private Button btnSearch;
+    private EditText etSearch;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

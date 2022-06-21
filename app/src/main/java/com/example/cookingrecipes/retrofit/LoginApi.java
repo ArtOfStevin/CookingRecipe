@@ -1,17 +1,13 @@
 package com.example.cookingrecipes.retrofit;
 
 import com.example.cookingrecipes.model.RetrofitLoginBody;
-import com.example.cookingrecipes.model.User;
-
-import java.util.List;
+import com.example.cookingrecipes.model.UserFromApi;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
-import retrofit2.http.Path;
 
 public interface LoginApi {
 
@@ -25,7 +21,7 @@ public interface LoginApi {
 
     @FormUrlEncoded
     @POST("/user/login")
-    Call<User> verifUser(
+    Call<UserFromApi> verifUser(
             @Header("X-API-KEY") String apiKey,
             @Body RetrofitLoginBody body
     );

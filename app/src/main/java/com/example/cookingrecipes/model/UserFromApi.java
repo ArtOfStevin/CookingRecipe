@@ -2,7 +2,7 @@ package com.example.cookingrecipes.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class User {
+public class UserFromApi {
 
     @SerializedName("id")
     private String id;

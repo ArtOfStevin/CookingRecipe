@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.activity.LoginActivity;
 import com.example.cookingrecipes.activity.MainActivity;
+import com.example.cookingrecipes.logic.SessionManagementUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,12 +26,12 @@ import com.example.cookingrecipes.activity.MainActivity;
  */
 public class UserDetailFragment extends Fragment {
 
-    TextView tvUsernameCenter;
-    TextView tvUsername;
-    TextView tvEmail;
+    private TextView tvUsernameCenter;
+    private TextView tvUsername;
+    private TextView tvEmail;
 
-    Button btnLogout;
-    ImageView ivPhotoProfile;
+    private Button btnLogout;
+    private ImageView ivPhotoProfile;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class UserDetailFragment extends Fragment {
         this.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SessionManagementUtil.getInstance().clearStoredData(requireContext());
                 toLoginScreen();
             }
         });

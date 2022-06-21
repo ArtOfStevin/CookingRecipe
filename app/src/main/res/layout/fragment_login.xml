@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="etPassword"
+        app:constraint_referenced_ids="tvInvalidUser"
         tools:layout_editor_absoluteY="236dp" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -57,6 +57,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/etPassword" />
 
+    <TextView
+        android:id="@+id/tvInvalidUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Invalid"
+        android:textColor="@color/red"
+        android:visibility="invisible"
+        app:layout_constraintHorizontal_bias="0.524"
+        app:layout_constraintEnd_toEndOf="@id/etPassword"
+        app:layout_constraintTop_toBottomOf="@id/etPassword" />
+
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="0dp"
@@ -74,7 +85,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/password"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toStartOf="@id/lineEndUsernameAndPassword"
         app:layout_constraintStart_toEndOf="@id/lineStartUsernameAndPassword"
         app:layout_constraintTop_toBottomOf="@id/etUsername" />

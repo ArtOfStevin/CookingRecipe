@@ -27,10 +27,10 @@ import java.util.List;
  */
 public class HomeFragment extends Fragment {
 
-    TextView tvTest;
-    List<FoodBanner> foodBannerList = new ArrayList<>();
-    RVAdapterFoodBanner rvAdapterFoodBanner;
-    RecyclerView rvHolderHome;
+    private TextView tvTest;
+    private List<FoodBanner> foodBannerList = new ArrayList<>();
+    private RVAdapterFoodBanner rvAdapterFoodBanner;
+    private RecyclerView rvHolderHome;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
