@@ -27,10 +27,10 @@ import java.util.List;
  */
 public class HomeFragment extends Fragment {
 
-    TextView tvTest;
-    List<FoodBanner> foodBannerList = new ArrayList<>();
-    RVAdapterFoodBanner rvAdapterFoodBanner;
-    RecyclerView rvHolderHome;
+    private TextView tvTest;
+    private List<FoodBanner> foodBannerList = new ArrayList<>();
+    private RVAdapterFoodBanner rvAdapterFoodBanner;
+    private RecyclerView rvHolderHome;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        rvAdapterFoodBanner = new RVAdapterFoodBanner(FoodBanner.generateFoodBannerList());
+        rvAdapterFoodBanner = new RVAdapterFoodBanner(FoodBanner.generateFoodBannerList(), requireContext());
 
         rvHolderHome = view.findViewById(R.id.rv_home_holder);
         rvHolderHome.setAdapter(rvAdapterFoodBanner);
