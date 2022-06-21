@@ -1,19 +1,14 @@
 package com.example.cookingrecipes.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.fragment.FavoriteFragment;
@@ -21,6 +16,7 @@ import com.example.cookingrecipes.fragment.HomeFragment;
 import com.example.cookingrecipes.fragment.SearchFragment;
 import com.example.cookingrecipes.fragment.UserDetailFragment;
 import com.example.cookingrecipes.logic.SessionManagementUtil;
+import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -28,7 +24,8 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    BottomNavigationView bottomNavigationView;
+    private BottomNavigationView bottomNavigationView;
+    private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
         this.bottomNavigationView = findViewById(R.id.bottomNavViewHolder);
         initBottomNavigationView();
+
+        this.vmFoodBannerRepositoryBridge = new ViewModelProvider(this).get(VMFoodBannerRepositoryBridge.class);
+        vmFoodBannerRepositoryBridge.injectApiDataToDB();
     }
 
     @Override

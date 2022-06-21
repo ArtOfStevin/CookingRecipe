@@ -1,17 +1,37 @@
-package com.example.cookingrecipes.model;
+package com.example.cookingrecipes.database.entity;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class FoodBanner {
 
+    @PrimaryKey(autoGenerate = true)
+    public int uid;
+
+    @ColumnInfo(name = "title")
     private String title;
+
+    @ColumnInfo(name = "image_url")
     private String imageUrl;
+
+    @ColumnInfo(name = "summary")
     private String summary;
+
+    @ColumnInfo(name = "is_favorite")
     private boolean isFavorite;
 
+    @ColumnInfo(name = "time_needed")
     private String timeNeeded;
+
+    @ColumnInfo(name = "serve_portion")
     private String servePortion;
+
+    @ColumnInfo(name = "difficulty")
     private String difficulty;
 
     public String getSummary() {

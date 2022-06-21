@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.activity.MainActivity;
 import com.example.cookingrecipes.logic.SessionManagementUtil;
 import com.example.cookingrecipes.logic.VerifyUser;
+import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,11 +37,13 @@ public class LoginFragment extends Fragment {
     private TextView tvInvalidUser;
 
     private VerifyUser verifyUser;
+    private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.vmFoodBannerRepositoryBridge = new ViewModelProvider(requireActivity()).get(VMFoodBannerRepositoryBridge.class);
         this.verifyUser = new VerifyUser();
     }
 
@@ -74,7 +78,8 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(verifyUser.isValid(etUsername.getText().toString(), etPassword.getText().toString())) {
-                    SessionManagementUtil.getInstance().startUserSession(requireContext(), 30);
+                    SessionManagementUtil.getInstance().startUserSession(requireContext(), 5);
+                    clearFoodTable();
                     changeToHomeActivity();
                 }
                 else{
@@ -90,5 +95,9 @@ public class LoginFragment extends Fragment {
         Intent intent = new Intent(this.requireContext(), MainActivity.class);
         intent.putExtra("loginUser", this.etUsername.getText().toString());
         startActivity(intent);
+    }
+
+    private void clearFoodTable(){
+        this.vmFoodBannerRepositoryBridge.clearTable();
     }
 }

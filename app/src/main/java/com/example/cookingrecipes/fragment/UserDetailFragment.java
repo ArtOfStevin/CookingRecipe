@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,8 @@ import android.widget.TextView;
 
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.activity.LoginActivity;
-import com.example.cookingrecipes.activity.MainActivity;
 import com.example.cookingrecipes.logic.SessionManagementUtil;
+import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,10 +33,12 @@ public class UserDetailFragment extends Fragment {
 
     private Button btnLogout;
     private ImageView ivPhotoProfile;
+    private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.vmFoodBannerRepositoryBridge = new ViewModelProvider(requireActivity()).get(VMFoodBannerRepositoryBridge.class);
     }
 
     @Override
@@ -70,6 +73,12 @@ public class UserDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 SessionManagementUtil.getInstance().clearStoredData(requireContext());
+                vmFoodBannerRepositoryBridge.clearTable();
+                vmFoodBannerRepositoryBridge.getLiveDataAllFoodBanner().observe(getViewLifecycleOwner(), foodBannerList -> {
+                    for (int i = 0; i < foodBannerList.size(); i++) {
+                        System.out.println("LogOut ROOM: Title: "+foodBannerList.get(i).getTitle());
+                    }
+                });
                 toLoginScreen();
             }
         });

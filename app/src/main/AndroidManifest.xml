@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.cookingrecipes">
 
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,10 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CookingRecipes"
         tools:targetApi="31">
-        <activity
-            android:name=".activity.BottomNavActivity"
-            android:exported="false"
-            android:label="@string/title_activity_bottom_nav" />
         <activity
             android:name=".activity.MainActivity"
             android:exported="false" />
