@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        rvAdapterFoodBanner = new RVAdapterFoodBanner(FoodBanner.generateFoodBannerList());
+        rvAdapterFoodBanner = new RVAdapterFoodBanner(FoodBanner.generateFoodBannerList(), requireContext());
 
         rvHolderHome = view.findViewById(R.id.rv_home_holder);
         rvHolderHome.setAdapter(rvAdapterFoodBanner);

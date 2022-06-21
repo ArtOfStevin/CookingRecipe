@@ -1,5 +1,6 @@
 package com.example.cookingrecipes.recycler_view;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,15 +19,18 @@ import java.util.List;
 public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanner.ViewHolder>{
 
     private List<FoodBanner> foodBannerList;
+    private Context context;
 
-    public RVAdapterFoodBanner(List<FoodBanner> foodBannerList){
+    public RVAdapterFoodBanner(List<FoodBanner> foodBannerList, Context context){
         this.foodBannerList = foodBannerList;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_unit_food_banner, parent, false);
+//        View view = LayoutInflater.from(this.context).inflate(R.layout.rv_unit_food_banner, parent, false);
         return new RVAdapterFoodBanner.ViewHolder(view);
     }
 
@@ -40,12 +44,6 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
         holder.tvServePortion.setText(foodBanner.getServePortion());
         holder.tvDifficulty.setText(foodBanner.getDifficulty());
         holder.ivFoodPicture.setImageResource(R.drawable.ribbon);
-
-//        try{
-//            URI uri = new URI("https://images.tokopedia.net/img/cache/900/product-1/2017/9/4/0/0_4fb05e35-6eb7-4849-84c5-60663c0cc1f5_488_583.jpg");
-//
-//        }
-//        catch (Exception e){}
     }
 
     @Override

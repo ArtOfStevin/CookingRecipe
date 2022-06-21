@@ -23,7 +23,15 @@
         <entry key="..\:/Android/Projects/CookingRecipes/app/src/main/res/layout/fragment_user_detail.xml" value="0.358695652173913" />
         <entry key="..\:/Android/Projects/CookingRecipes/app/src/main/res/layout/rv_unit_food_banner.xml" value="0.264" />
         <entry key="..\:/Android/Projects/CookingRecipes/app/src/main/res/menu/bottom_nav_menu.xml" value="0.4" />
+        <entry key="..\:/Android/Projects/Git/CookingRecipes/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.154" />
+        <entry key="..\:/Android/Projects/Git/CookingRecipes/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.154" />
+        <entry key="..\:/Android/Projects/Git/CookingRecipes/app/src/main/res/layout/fragment_favorite.xml" value="0.2390625" />
+        <entry key="..\:/Android/Projects/Git/CookingRecipes/app/src/main/res/layout/fragment_home.xml" value="0.13858695652173914" />
+        <entry key="..\:/Android/Projects/Git/CookingRecipes/app/src/main/res/layout/fragment_login.xml" value="0.2390625" />
+        <entry key="..\:/Android/Projects/Git/CookingRecipes/app/src/main/res/layout/fragment_notif_page.xml" value="0.2390625" />
+        <entry key="..\:/Android/Projects/Git/CookingRecipes/app/src/main/res/layout/fragment_search.xml" value="0.264" />
         <entry key="..\:/Android/Projects/Git/CookingRecipes/app/src/main/res/layout/fragment_user_detail.xml" value="0.1334853090172239" />
+        <entry key="..\:/Android/Projects/Git/CookingRecipes/app/src/main/res/layout/rv_unit_food_banner.xml" value="0.38697916666666665" />
       </map>
     </option>
   </component>
