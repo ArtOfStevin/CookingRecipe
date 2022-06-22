@@ -1,26 +1,24 @@
 package com.example.cookingrecipes.fragment;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.SearchView;
 
 import com.example.cookingrecipes.R;
-import com.example.cookingrecipes.model.FoodBanner;
+import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.recycler_view.RVAdapterFoodBanner;
+import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +36,12 @@ public class SearchFragment extends Fragment {
 
     private Button btnSearch;
     private EditText etSearch;
+    private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.vmFoodBannerRepositoryBridge = new ViewModelProvider(requireActivity()).get(VMFoodBannerRepositoryBridge.class);
     }
 
     @Override
@@ -61,12 +60,17 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        this.foodBannerList.addAll(FoodBanner.generateFoodBannerList());
         this.rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, requireContext());
 
         this.rvHolderSearch = view.findViewById(R.id.rv_search_holder);
         this.rvHolderSearch.setAdapter(this.rvAdapterFoodBanner);
         this.rvHolderSearch.setLayoutManager(new LinearLayoutManager(requireActivity()));
+
+        this.vmFoodBannerRepositoryBridge.getLiveDataAllFoodBanner().observe(getViewLifecycleOwner(), getList -> {
+            foodBannerList.clear();
+            foodBannerList.addAll(getList);
+            rvAdapterFoodBanner.notifyDataSetChanged();
+        });
 
         initOnClick();
     }
