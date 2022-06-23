@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.database.entity.FoodBanner;
-import com.example.cookingrecipes.fragment.HomeFragment;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -26,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanner.ViewHolder>{
+public class RVAdapterFoodBannerFavorite extends RecyclerView.Adapter<RVAdapterFoodBannerFavorite.ViewHolder>{
 
     private List<FoodBanner> foodBannerList;
     private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
@@ -36,7 +35,7 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
     private int nightModeFlags;
     private String username;
 
-    public RVAdapterFoodBanner(List<FoodBanner> foodBannerList, @NonNull BtnClickableCallback btnClickableCallback, String username){
+    public RVAdapterFoodBannerFavorite(List<FoodBanner> foodBannerList, @NonNull BtnClickableCallback btnClickableCallback, String username){
         this.foodBannerList = foodBannerList;
         this.mainThread = new Handler(Looper.getMainLooper());
         this.btnClickableCallback = btnClickableCallback;
@@ -50,64 +49,69 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
         this.nightModeFlags =
                 parent.getContext().getResources().getConfiguration().uiMode &
                         Configuration.UI_MODE_NIGHT_MASK;
-        return new RVAdapterFoodBanner.ViewHolder(view);
+        return new RVAdapterFoodBannerFavorite.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FoodBanner foodBanner = foodBannerList.get(position);
-        holder.tvTitle.setText(foodBanner.getTitle());
 
-        holder.tvTimeNeeded.setText(foodBanner.getTimeNeeded());
-        holder.tvServePortion.setText(foodBanner.getServePortion());
-        holder.tvDifficulty.setText(foodBanner.getDifficulty());
-        holder.ivFoodPicture.setImageResource(R.drawable.ribbon);
-        boolean isFavorite = foodBanner.isFavorite();
+        if(foodBannerList.size() != 0) {
+            FoodBanner foodBanner = foodBannerList.get(position);
+            holder.tvTitle.setText(foodBanner.getTitle());
 
-        switch (nightModeFlags) {
-            case Configuration.UI_MODE_NIGHT_YES:
-                if(isFavorite) holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
-                else holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_white);
-                holder.ivLogoTime.setImageResource(R.drawable.ic_baseline_access_time_white);
-                holder.ivLogoPortion.setImageResource(R.drawable.ic_baseline_fastfood_white);
-                holder.ivLogoDifficulty.setImageResource(R.drawable.ic_baseline_psychology_white);
-                break;
+            holder.tvTimeNeeded.setText(foodBanner.getTimeNeeded());
+            holder.tvServePortion.setText(foodBanner.getServePortion());
+            holder.tvDifficulty.setText(foodBanner.getDifficulty());
+            holder.ivFoodPicture.setImageResource(R.drawable.ribbon);
+            boolean isFavorite = foodBanner.isFavorite();
 
-            case Configuration.UI_MODE_NIGHT_NO:
-                if(isFavorite) holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
-                else holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_black);
-                holder.ivLogoTime.setImageResource(R.drawable.ic_baseline_access_time_black);
-                holder.ivLogoPortion.setImageResource(R.drawable.ic_baseline_fastfood_black);
-                holder.ivLogoDifficulty.setImageResource(R.drawable.ic_baseline_psychology_black);
-                break;
+            switch (nightModeFlags) {
+                case Configuration.UI_MODE_NIGHT_YES:
+                    if (isFavorite)
+                        holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
+                    else
+                        holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_white);
+                    holder.ivLogoTime.setImageResource(R.drawable.ic_baseline_access_time_white);
+                    holder.ivLogoPortion.setImageResource(R.drawable.ic_baseline_fastfood_white);
+                    holder.ivLogoDifficulty.setImageResource(R.drawable.ic_baseline_psychology_white);
+                    break;
 
-            case Configuration.UI_MODE_NIGHT_UNDEFINED:
-                break;
-        }
+                case Configuration.UI_MODE_NIGHT_NO:
+                    if (isFavorite)
+                        holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
+                    else
+                        holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_black);
+                    holder.ivLogoTime.setImageResource(R.drawable.ic_baseline_access_time_black);
+                    holder.ivLogoPortion.setImageResource(R.drawable.ic_baseline_fastfood_black);
+                    holder.ivLogoDifficulty.setImageResource(R.drawable.ic_baseline_psychology_black);
+                    break;
 
-        // Thread Worker untuk narik gambar (Stream) dari internetnya
-        threadWorker.execute(new Runnable() {
-            @Override
-            public void run() {
-                try{
-                    String url = foodBanner.getImageUrl();
-                    InputStream inputStream = new URL(url).openStream();
-                    Bitmap bm = BitmapFactory.decodeStream(inputStream);
-
-                    // Untuk ubah UI aja
-                    mainThread.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            holder.ivFoodPicture.setImageBitmap(bm);
-                        }
-                    });
-                }
-                catch(Exception e){
-                    Log.wtf("IMAGELOG", "onBindViewHolder: " + e);
-                }
+                case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                    break;
             }
-        });
 
+            // Thread Worker untuk narik gambar (Stream) dari internetnya
+            threadWorker.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String url = foodBanner.getImageUrl();
+                        InputStream inputStream = new URL(url).openStream();
+                        Bitmap bm = BitmapFactory.decodeStream(inputStream);
+
+                        // Untuk ubah UI aja
+                        mainThread.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                holder.ivFoodPicture.setImageBitmap(bm);
+                            }
+                        });
+                    } catch (Exception e) {
+                        Log.wtf("IMAGELOG", "onBindViewHolder: " + e);
+                    }
+                }
+            });
+        }
     }
 
     @Override

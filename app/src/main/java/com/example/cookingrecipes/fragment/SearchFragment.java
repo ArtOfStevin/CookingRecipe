@@ -19,13 +19,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.activity.DetailActivity;
 import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.recycler_view.BtnClickableCallback;
-import com.example.cookingrecipes.recycler_view.RVAdapterFoodBanner;
+import com.example.cookingrecipes.recycler_view.RVAdapterFoodBannerHome;
+import com.example.cookingrecipes.recycler_view.RVAdapterFoodBannerSearch;
 import com.example.cookingrecipes.view_model.VMFoodBannerFavoriteRepository;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 
@@ -42,7 +42,7 @@ import java.util.concurrent.Executors;
 public class SearchFragment extends Fragment {
 
     private List<FoodBanner> foodBannerList = new ArrayList<>();
-    private RVAdapterFoodBanner rvAdapterFoodBanner;
+    private RVAdapterFoodBannerSearch rvAdapterFoodBannerSearch;
     private RecyclerView rvHolderSearch;
 
     private Button btnSearch;
@@ -86,9 +86,8 @@ public class SearchFragment extends Fragment {
 
     public void changeToDetailFragment(String key, String username){
         Intent intent = new Intent(requireContext(), DetailActivity.class);
-        intent.putExtra("login_username", loginUserName);
+        intent.putExtra("login_username", username);
         intent.putExtra("food_banner_key", key);
-        System.out.println("FOOD BANNER KEY: "+key);
 
         startActivity(intent);
     }
@@ -105,7 +104,7 @@ public class SearchFragment extends Fragment {
                     foodBanner.setFavorite(true);
                 }
                 foodBannerList.set(position, foodBanner);
-                rvAdapterFoodBanner.notifyDataSetChanged();
+                rvAdapterFoodBannerSearch.notifyDataSetChanged();
             }
         });
     }
@@ -139,10 +138,10 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        this.rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, btnClickableCallback, this.loginUserName);
+        this.rvAdapterFoodBannerSearch = new RVAdapterFoodBannerSearch(this.foodBannerList, btnClickableCallback, this.loginUserName);
 
         this.rvHolderSearch = view.findViewById(R.id.rv_search_holder);
-        this.rvHolderSearch.setAdapter(this.rvAdapterFoodBanner);
+        this.rvHolderSearch.setAdapter(this.rvAdapterFoodBannerSearch);
         this.rvHolderSearch.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         initLoadDB();
@@ -161,10 +160,10 @@ public class SearchFragment extends Fragment {
         threadWorker.execute(new Runnable() {
             @Override
             public void run() {
-                System.out.println("CHAIN WITH FAV:"+list.size());
-                for (int i = 0; i < foodBannerList.size(); i++) {
+                FoodBanner each;
+                for (int i = 0; i < list.size(); i++) {
                     Log.d("CHAIN WITH FAV LOOP", "run: ");
-                    FoodBanner each = foodBannerList.get(i);
+                    each = list.get(i);
                     boolean isExist = vmFoodBannerFavoriteRepository.isExist(each.getKey(), username);
                     if(isExist) {
                         each.setFavorite(true);
@@ -177,7 +176,7 @@ public class SearchFragment extends Fragment {
                 mainThread.post(new Runnable() {
                     @Override
                     public void run() {
-                        rvAdapterFoodBanner.notifyDataSetChanged();
+                        rvAdapterFoodBannerSearch.notifyDataSetChanged();
                     }
                 });
             }

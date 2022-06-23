@@ -7,7 +7,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,21 +16,15 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
 
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.activity.DetailActivity;
-import com.example.cookingrecipes.activity.MainActivity;
 import com.example.cookingrecipes.database.entity.FoodBanner;
-import com.example.cookingrecipes.database.entity.FoodBannerFavorite;
 import com.example.cookingrecipes.recycler_view.BtnClickableCallback;
 import com.example.cookingrecipes.view_model.VMFoodBannerFavoriteRepository;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
-import com.example.cookingrecipes.recycler_view.RVAdapterFoodBanner;
+import com.example.cookingrecipes.recycler_view.RVAdapterFoodBannerHome;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -45,7 +38,7 @@ import java.util.concurrent.Executors;
 public class HomeFragment extends Fragment {
 
     private List<FoodBanner> foodBannerList = new ArrayList<>();
-    private RVAdapterFoodBanner rvAdapterFoodBanner;
+    private RVAdapterFoodBannerHome rvAdapterFoodBannerHome;
     private RecyclerView rvHolderHome;
     private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
 
@@ -89,9 +82,8 @@ public class HomeFragment extends Fragment {
 
     public void changeToDetailFragment(String key, String username){
         Intent intent = new Intent(requireContext(), DetailActivity.class);
-        intent.putExtra("login_username", loginUserName);
+        intent.putExtra("login_username", username);
         intent.putExtra("food_banner_key", key);
-        System.out.println("FOOD BANNER KEY: "+key);
 
         startActivity(intent);
     }
@@ -108,7 +100,7 @@ public class HomeFragment extends Fragment {
                     foodBanner.setFavorite(true);
                 }
                 foodBannerList.set(position, foodBanner);
-                rvAdapterFoodBanner.notifyDataSetChanged();
+                rvAdapterFoodBannerHome.notifyDataSetChanged();
             }
         });
     }
@@ -129,7 +121,6 @@ public class HomeFragment extends Fragment {
 
         this.rvHolderHome = fragmentView.findViewById(R.id.rv_home_holder);
 //        this.progressBar = fragmentView.findViewById(R.id.loadingHomeAnimation);
-//        this.loginUserName = requireActivity().getIntent().getStringExtra("login_username");
         this.loginUserName = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
                 .getString("login_username", "");
 
@@ -141,9 +132,9 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, btnClickableCallback, this.loginUserName);
+        rvAdapterFoodBannerHome = new RVAdapterFoodBannerHome(this.foodBannerList, btnClickableCallback, this.loginUserName);
 
-        rvHolderHome.setAdapter(rvAdapterFoodBanner);
+        rvHolderHome.setAdapter(rvAdapterFoodBannerHome);
         rvHolderHome.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         initLoadDB();
@@ -162,8 +153,9 @@ public class HomeFragment extends Fragment {
         threadWorker.execute(new Runnable() {
             @Override
             public void run() {
+                FoodBanner each;
                 for (int i = 0; i < list.size(); i++) {
-                    FoodBanner each = list.get(i);
+                    each = list.get(i);
                     boolean isExist = vmFoodBannerFavoriteRepository.isExist(each.getKey(), username);
                     if(isExist) {
                         each.setFavorite(true);
@@ -176,7 +168,7 @@ public class HomeFragment extends Fragment {
                 mainThread.post(new Runnable() {
                     @Override
                     public void run() {
-                        rvAdapterFoodBanner.notifyDataSetChanged();
+                        rvAdapterFoodBannerHome.notifyDataSetChanged();
                     }
                 });
             }
