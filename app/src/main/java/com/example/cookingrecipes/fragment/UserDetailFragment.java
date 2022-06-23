@@ -79,11 +79,6 @@ public class UserDetailFragment extends Fragment {
             public void onClick(View v) {
                 SessionManagementUtil.getInstance().clearStoredData(requireContext());
                 vmFoodBannerRepositoryBridge.clearTable();
-                vmFoodBannerRepositoryBridge.getLiveDataAllFoodBanner().observe(getViewLifecycleOwner(), foodBannerList -> {
-                    for (int i = 0; i < foodBannerList.size(); i++) {
-                        System.out.println("LogOut ROOM: Title: "+foodBannerList.get(i).getTitle());
-                    }
-                });
                 toLoginScreen();
             }
         });

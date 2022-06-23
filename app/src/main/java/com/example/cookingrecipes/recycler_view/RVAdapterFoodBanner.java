@@ -1,9 +1,7 @@
 package com.example.cookingrecipes.recycler_view;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -20,11 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.database.entity.FoodBanner;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,14 +27,15 @@ import java.util.concurrent.Executors;
 public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanner.ViewHolder>{
 
     private List<FoodBanner> foodBannerList;
-    private Context context;
     public static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
     private Handler mainThread;
 
-    public RVAdapterFoodBanner(List<FoodBanner> foodBannerList, Context context){
+    private BtnClickableCallback btnClickableCallback;
+
+    public RVAdapterFoodBanner(List<FoodBanner> foodBannerList, @NonNull BtnClickableCallback btnClickableCallback){
         this.foodBannerList = foodBannerList;
-        this.context = context;
         this.mainThread = new Handler(Looper.getMainLooper());
+        this.btnClickableCallback = btnClickableCallback;
     }
 
     @NonNull
@@ -59,6 +55,9 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
         holder.tvServePortion.setText(foodBanner.getServePortion());
         holder.tvDifficulty.setText(foodBanner.getDifficulty());
         holder.ivFoodPicture.setImageResource(R.drawable.ribbon);
+        boolean isFavorite = foodBanner.isFavorite();
+        if(isFavorite) holder.btnFavorite.setText("LIKED");
+        else holder.btnFavorite.setText("NOT LIKED");
 
         // Thread Worker untuk narik gambar (Stream) dari internetnya
         threadWorker.execute(new Runnable() {
@@ -90,7 +89,7 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
         return foodBannerList.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView tvTitle;
         TextView tvSummary;
@@ -114,6 +113,28 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
 
             btnFavorite = itemView.findViewById(R.id.btnFavorite);
             ivFoodPicture = itemView.findViewById(R.id.ivFoodPicture);
+
+            itemView.setOnClickListener(this);
+            initBtnFavClick();
+        }
+
+        private void initBtnFavClick(){
+            this.btnFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int postition = getAdapterPosition(); // gets item position
+
+                    if(postition != RecyclerView.NO_POSITION) { // Check if on item was deleted
+                        FoodBanner foodBanner = foodBannerList.get(postition);
+                        btnClickableCallback.onClick(v, foodBanner, postition, btnFavorite);
+                    }
+                }
+            });
+        }
+
+        @Override
+        public void onClick(View v) {
+            // Callback disini kalau mau on click ketika 1 foodbanner di click
         }
     }
 }

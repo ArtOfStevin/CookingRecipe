@@ -14,7 +14,6 @@ import com.example.cookingrecipes.model.ResponseFromFoodApi;
 import com.example.cookingrecipes.retrofit.FoodApi;
 import com.example.cookingrecipes.retrofit.RetrofitInstance;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -63,6 +62,7 @@ public class VMFoodBannerRepositoryBridge extends AndroidViewModel {
         for (int i = 0; i < foodBannerlistApi.size(); i++) {
             FoodBanner temp = new FoodBanner();
             FoodBannerFromApi tempApi = foodBannerlistApi.get(i);
+            temp.setKey(tempApi.getKey());
             temp.setTitle(tempApi.getTitle());
             temp.setImageUrl(tempApi.getImageUrl());
             temp.setSummary("Summary");
@@ -89,8 +89,12 @@ public class VMFoodBannerRepositoryBridge extends AndroidViewModel {
         this.threadWorker.execute(new Runnable() {
             @Override
             public void run() {
-                foodBannerDBRepository.clearFoodBannerTable();
+                foodBannerDBRepository.clearTable();
             }
         });
+    }
+
+    public LiveData<List<FoodBanner>> search(String query){
+        return this.foodBannerDBRepository.search(query);
     }
 }

@@ -13,6 +13,9 @@ public class FoodBanner {
     @PrimaryKey(autoGenerate = true)
     public int uid;
 
+    @ColumnInfo(name = "key")
+    private String key;
+
     @ColumnInfo(name = "title")
     private String title;
 
@@ -88,6 +91,14 @@ public class FoodBanner {
 
     public void setDifficulty(String difficulty) {
         this.difficulty = difficulty;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public static List<FoodBanner> generateFoodBannerList(){

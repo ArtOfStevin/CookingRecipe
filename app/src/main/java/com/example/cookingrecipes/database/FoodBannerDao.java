@@ -9,7 +9,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.example.cookingrecipes.database.entity.FoodBanner;
-import com.example.cookingrecipes.database.entity.User;
 
 import java.util.List;
 
@@ -18,6 +17,9 @@ public interface FoodBannerDao {
 
     @Query("SELECT * FROM FoodBanner")
     LiveData<List<FoodBanner>> getAll();
+
+    @Query("SELECT * FROM FoodBanner WHERE title LIKE '%' || :query|| '%'")
+    LiveData<List<FoodBanner>> search(String query);
 
     // : itu artinya parameter dari methodnya
     @Query("SELECT * FROM FoodBanner WHERE is_favorite = :isFavorite")
