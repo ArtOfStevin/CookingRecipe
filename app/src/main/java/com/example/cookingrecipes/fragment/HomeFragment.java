@@ -1,5 +1,6 @@
 package com.example.cookingrecipes.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,6 +50,8 @@ public class HomeFragment extends Fragment {
     private Handler mainThread;
 
     public static final String LOGIN_PREFERENCE = "com.example.cookingrecipes.LOGIN_PREFERENCE";
+
+    public AlertDialog.Builder alertDialogBuilder;
 
     // Loading Animation
 //    private ProgressBar progressBar;
@@ -123,6 +126,7 @@ public class HomeFragment extends Fragment {
 //        this.progressBar = fragmentView.findViewById(R.id.loadingHomeAnimation);
         this.loginUserName = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
                 .getString("login_username", "");
+        this.alertDialogBuilder = new AlertDialog.Builder(requireContext());
 
         return fragmentView;
     }
