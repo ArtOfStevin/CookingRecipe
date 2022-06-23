@@ -1,5 +1,6 @@
 package com.example.cookingrecipes.recycler_view;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -8,7 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
     private Handler mainThread;
 
     private BtnClickableCallback btnClickableCallback;
+    private int nightModeFlags;
 
     public RVAdapterFoodBanner(List<FoodBanner> foodBannerList, @NonNull BtnClickableCallback btnClickableCallback){
         this.foodBannerList = foodBannerList;
@@ -42,6 +44,9 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_unit_food_banner, parent, false);
+        this.nightModeFlags =
+                parent.getContext().getResources().getConfiguration().uiMode &
+                        Configuration.UI_MODE_NIGHT_MASK;
         return new RVAdapterFoodBanner.ViewHolder(view);
     }
 
@@ -56,8 +61,27 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
         holder.tvDifficulty.setText(foodBanner.getDifficulty());
         holder.ivFoodPicture.setImageResource(R.drawable.ribbon);
         boolean isFavorite = foodBanner.isFavorite();
-        if(isFavorite) holder.btnFavorite.setText("LIKED");
-        else holder.btnFavorite.setText("NOT LIKED");
+
+        switch (nightModeFlags) {
+            case Configuration.UI_MODE_NIGHT_YES:
+                if(isFavorite) holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
+                else holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_white);
+                holder.ivLogoTime.setImageResource(R.drawable.ic_baseline_access_time_white);
+                holder.ivLogoPortion.setImageResource(R.drawable.ic_baseline_fastfood_white);
+                holder.ivLogoDifficulty.setImageResource(R.drawable.ic_baseline_psychology_white);
+                break;
+
+            case Configuration.UI_MODE_NIGHT_NO:
+                if(isFavorite) holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
+                else holder.ibFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_black);
+                holder.ivLogoTime.setImageResource(R.drawable.ic_baseline_access_time_black);
+                holder.ivLogoPortion.setImageResource(R.drawable.ic_baseline_fastfood_black);
+                holder.ivLogoDifficulty.setImageResource(R.drawable.ic_baseline_psychology_black);
+                break;
+
+            case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                break;
+        }
 
         // Thread Worker untuk narik gambar (Stream) dari internetnya
         threadWorker.execute(new Runnable() {
@@ -99,7 +123,12 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
         TextView tvDifficulty;
 
         ImageView ivFoodPicture;
-        Button btnFavorite;
+        ImageButton ibFavorite;
+
+        // Logo
+        ImageView ivLogoTime;
+        ImageView ivLogoPortion;
+        ImageView ivLogoDifficulty;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -111,22 +140,26 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
             tvServePortion = itemView.findViewById(R.id.tvServePortion);
             tvDifficulty = itemView.findViewById(R.id.tvDifficulty);
 
-            btnFavorite = itemView.findViewById(R.id.btnFavorite);
             ivFoodPicture = itemView.findViewById(R.id.ivFoodPicture);
+            ibFavorite = itemView.findViewById(R.id.ibFavorite);
+
+            ivLogoTime = itemView.findViewById(R.id.ivLogoTime);
+            ivLogoPortion = itemView.findViewById(R.id.ivLogoPortion);
+            ivLogoDifficulty = itemView.findViewById(R.id.ivLogoDifficulty);
 
             itemView.setOnClickListener(this);
             initBtnFavClick();
         }
 
         private void initBtnFavClick(){
-            this.btnFavorite.setOnClickListener(new View.OnClickListener() {
+            this.ibFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int postition = getAdapterPosition(); // gets item position
 
                     if(postition != RecyclerView.NO_POSITION) { // Check if on item was deleted
                         FoodBanner foodBanner = foodBannerList.get(postition);
-                        btnClickableCallback.onClick(v, foodBanner, postition, btnFavorite);
+                        btnClickableCallback.onClick(v, foodBanner, postition);
                     }
                 }
             });
