@@ -1,5 +1,7 @@
 package com.example.cookingrecipes.fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.example.cookingrecipes.R;
+import com.example.cookingrecipes.activity.DetailActivity;
 import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.recycler_view.BtnClickableCallback;
 import com.example.cookingrecipes.recycler_view.RVAdapterFoodBanner;
@@ -52,28 +55,43 @@ public class SearchFragment extends Fragment {
     private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
     private Handler mainThread;
 
+    public static final String LOGIN_PREFERENCE = "com.example.cookingrecipes.LOGIN_PREFERENCE";
+
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {
         @Override
         public void onClick(View view, FoodBanner foodBanner, int position, boolean isButton) {
             String key = foodBanner.getKey();
 
-            threadWorker.execute(new Runnable() {
-                @Override
-                public void run() {
-                    boolean isExist = vmFoodBannerFavoriteRepository.isExist(key, loginUserName);
+            if(isButton) {
+                threadWorker.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean isExist = vmFoodBannerFavoriteRepository.isExist(key, loginUserName);
 
-                    if(isExist){
-                        vmFoodBannerFavoriteRepository.deleteFavorite(key, loginUserName);
+                        if (isExist) {
+                            vmFoodBannerFavoriteRepository.deleteFavorite(key, loginUserName);
+                        } else {
+                            vmFoodBannerFavoriteRepository.insertFavorite(key, loginUserName);
+                        }
+                        changeFavoriteButton(isExist, position);
                     }
-                    else{
-                        vmFoodBannerFavoriteRepository.insertFavorite(key, loginUserName);
-                    }
-                    changeFavoriteButton(isExist, position);
-                }
-            });
+                });
+            }
+            else{
+                changeToDetailFragment(key, loginUserName);
+            }
 
         }
     };
+
+    public void changeToDetailFragment(String key, String username){
+        Intent intent = new Intent(requireContext(), DetailActivity.class);
+        intent.putExtra("login_username", loginUserName);
+        intent.putExtra("food_banner_key", key);
+        System.out.println("FOOD BANNER KEY: "+key);
+
+        startActivity(intent);
+    }
 
     public void changeFavoriteButton(boolean isExist, int position){
         mainThread.post(new Runnable() {
@@ -107,7 +125,9 @@ public class SearchFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_search, container, false);
         this.btnSearch = fragmentView.findViewById(R.id.btnSearch);
         this.etSearch = fragmentView.findViewById(R.id.etSearch);
-        this.loginUserName = requireActivity().getIntent().getStringExtra("login_username");
+//        this.loginUserName = requireActivity().getIntent().getStringExtra("login_username");
+        this.loginUserName = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
+                .getString("login_username", "");
 
         initOnClick();
 

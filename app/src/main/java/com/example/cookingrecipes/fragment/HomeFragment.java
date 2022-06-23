@@ -1,5 +1,6 @@
 package com.example.cookingrecipes.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -53,6 +54,8 @@ public class HomeFragment extends Fragment {
     private VMFoodBannerFavoriteRepository vmFoodBannerFavoriteRepository;
     private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
     private Handler mainThread;
+
+    public static final String LOGIN_PREFERENCE = "com.example.cookingrecipes.LOGIN_PREFERENCE";
 
     // Loading Animation
 //    private ProgressBar progressBar;
@@ -126,7 +129,9 @@ public class HomeFragment extends Fragment {
 
         this.rvHolderHome = fragmentView.findViewById(R.id.rv_home_holder);
 //        this.progressBar = fragmentView.findViewById(R.id.loadingHomeAnimation);
-        this.loginUserName = requireActivity().getIntent().getStringExtra("login_username");
+//        this.loginUserName = requireActivity().getIntent().getStringExtra("login_username");
+        this.loginUserName = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
+                .getString("login_username", "");
 
         return fragmentView;
     }

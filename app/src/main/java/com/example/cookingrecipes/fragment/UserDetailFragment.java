@@ -1,5 +1,6 @@
 package com.example.cookingrecipes.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,6 +49,8 @@ public class UserDetailFragment extends Fragment {
     private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
     private Handler mainThread;
 
+    public static final String LOGIN_PREFERENCE = "com.example.cookingrecipes.LOGIN_PREFERENCE";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,10 +78,19 @@ public class UserDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String loginUserName = requireActivity().getIntent().getStringExtra("login_username");
-        String loginFullName = requireActivity().getIntent().getStringExtra("login_fullname");
-        String loginEmail = requireActivity().getIntent().getStringExtra("login_email");
-        String loginAvatar = requireActivity().getIntent().getStringExtra("login_avatar");
+//        String loginUserName = requireActivity().getIntent().getStringExtra("login_username");
+//        String loginFullName = requireActivity().getIntent().getStringExtra("login_fullname");
+//        String loginEmail = requireActivity().getIntent().getStringExtra("login_email");
+//        String loginAvatar = requireActivity().getIntent().getStringExtra("login_avatar");
+
+        String loginUserName = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
+                .getString("login_username", "");
+        String loginFullName = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
+                .getString("login_fullname", "");
+        String loginEmail = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
+                .getString("login_email", "");
+        String loginAvatar = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
+                .getString("login_avatar", "");
 
         this.tvUsernameCenter.setText(loginFullName);
         this.tvUsername.setText(loginUserName);

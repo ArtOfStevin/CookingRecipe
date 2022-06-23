@@ -24,8 +24,12 @@ public class DetailActivity extends AppCompatActivity {
                     .replace(R.id.flDetailActivityFragmentHolder, new DetailFragment())
                     .commitNow();
         }
+    }
 
-
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
