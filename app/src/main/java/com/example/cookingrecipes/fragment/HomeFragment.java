@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.database.entity.FoodBanner;
@@ -42,10 +43,13 @@ public class HomeFragment extends Fragment {
     private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
 
     // Untuk Favorite
-    String loginUserName="";
+    private String loginUserName="";
     private VMFoodBannerFavoriteRepository vmFoodBannerFavoriteRepository;
-    public static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
+    private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
     private Handler mainThread;
+
+    // Loading Animation
+//    private ProgressBar progressBar;
 
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {
         @Override
@@ -102,7 +106,8 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        rvHolderHome = fragmentView.findViewById(R.id.rv_home_holder);
+        this.rvHolderHome = fragmentView.findViewById(R.id.rv_home_holder);
+//        this.progressBar = fragmentView.findViewById(R.id.loadingHomeAnimation);
         this.loginUserName = requireActivity().getIntent().getStringExtra("login_username");
 
         return fragmentView;

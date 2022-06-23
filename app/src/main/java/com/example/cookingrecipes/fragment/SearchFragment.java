@@ -48,7 +48,7 @@ public class SearchFragment extends Fragment {
     // Untuk Favorite
     String loginUserName="";
     private VMFoodBannerFavoriteRepository vmFoodBannerFavoriteRepository;
-    public static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
+    private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
     private Handler mainThread;
 
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {
