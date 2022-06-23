@@ -49,7 +49,7 @@ public class FavoriteFragment extends Fragment {
 
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {
         @Override
-        public void onClick(View view, FoodBanner foodBanner, int position) {
+        public void onClick(View view, FoodBanner foodBanner, int position, boolean isButton) {
             String key = foodBanner.getKey();
 
             threadWorker.execute(new Runnable() {
@@ -110,7 +110,7 @@ public class FavoriteFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, btnClickableCallback);
+        rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, btnClickableCallback, this.loginUserName);
 
         rvHolderFavorite = view.findViewById(R.id.rv_favorite_holder);
         rvHolderFavorite.setAdapter(rvAdapterFoodBanner);

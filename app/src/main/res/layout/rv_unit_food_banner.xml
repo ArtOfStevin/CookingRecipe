@@ -9,31 +9,31 @@
         android:id="@+id/tvDifficulty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="120dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="124dp"
+        android:layout_marginTop="20dp"
         android:text="Difficulty"
         app:layout_constraintStart_toEndOf="@+id/tvTimeNeeded"
-        app:layout_constraintTop_toBottomOf="@+id/tvSummary" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <TextView
         android:id="@+id/tvServePortion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="42dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="20dp"
         android:text="Portion"
         app:layout_constraintStart_toEndOf="@+id/tvTimeNeeded"
-        app:layout_constraintTop_toBottomOf="@+id/tvSummary" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <TextView
         android:id="@+id/tvTimeNeeded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="20dp"
         android:text="Time"
-        app:layout_constraintStart_toStartOf="@+id/tvSummary"
-        app:layout_constraintTop_toBottomOf="@+id/tvSummary" />
+        app:layout_constraintStart_toStartOf="@+id/ivFoodPicture"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <ImageView
         android:id="@+id/ivFoodPicture"
@@ -44,15 +44,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
-    <TextView
-        android:id="@+id/tvSummary"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="Summary"
-        app:layout_constraintStart_toStartOf="@+id/ivFoodPicture"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <TextView
         android:id="@+id/tvTitle"

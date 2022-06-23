@@ -1,10 +1,12 @@
 package com.example.cookingrecipes.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +21,8 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.example.cookingrecipes.R;
+import com.example.cookingrecipes.activity.DetailActivity;
+import com.example.cookingrecipes.activity.MainActivity;
 import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.database.entity.FoodBannerFavorite;
 import com.example.cookingrecipes.recycler_view.BtnClickableCallback;
@@ -26,6 +30,7 @@ import com.example.cookingrecipes.view_model.VMFoodBannerFavoriteRepository;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 import com.example.cookingrecipes.recycler_view.RVAdapterFoodBanner;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -54,26 +59,39 @@ public class HomeFragment extends Fragment {
 
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {
         @Override
-        public void onClick(View view, FoodBanner foodBanner, int position) {
+        public void onClick(View view, FoodBanner foodBanner, int position, boolean isButton) {
             String key = foodBanner.getKey();
 
-            threadWorker.execute(new Runnable() {
-                @Override
-                public void run() {
-                    boolean isExist = vmFoodBannerFavoriteRepository.isExist(key, loginUserName);
+            if(isButton) {
+                threadWorker.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean isExist = vmFoodBannerFavoriteRepository.isExist(key, loginUserName);
 
-                    if(isExist){
-                        vmFoodBannerFavoriteRepository.deleteFavorite(key, loginUserName);
+                        if (isExist) {
+                            vmFoodBannerFavoriteRepository.deleteFavorite(key, loginUserName);
+                        } else {
+                            vmFoodBannerFavoriteRepository.insertFavorite(key, loginUserName);
+                        }
+                        changeFavoriteButton(isExist, position);
                     }
-                    else{
-                        vmFoodBannerFavoriteRepository.insertFavorite(key, loginUserName);
-                    }
-                    changeFavoriteButton(isExist, position);
-                }
-            });
+                });
+            }
+            else{
+                changeToDetailFragment(key, loginUserName);
+            }
 
         }
     };
+
+    public void changeToDetailFragment(String key, String username){
+        Intent intent = new Intent(requireContext(), DetailActivity.class);
+        intent.putExtra("login_username", loginUserName);
+        intent.putExtra("food_banner_key", key);
+        System.out.println("FOOD BANNER KEY: "+key);
+
+        startActivity(intent);
+    }
 
     public void changeFavoriteButton(boolean isExist, int position){
         mainThread.post(new Runnable() {
@@ -118,7 +136,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, btnClickableCallback);
+        rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, btnClickableCallback, this.loginUserName);
 
         rvHolderHome.setAdapter(rvAdapterFoodBanner);
         rvHolderHome.setLayoutManager(new LinearLayoutManager(requireActivity()));

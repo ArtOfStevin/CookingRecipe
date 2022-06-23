@@ -54,7 +54,7 @@ public class SearchFragment extends Fragment {
 
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {
         @Override
-        public void onClick(View view, FoodBanner foodBanner, int position) {
+        public void onClick(View view, FoodBanner foodBanner, int position, boolean isButton) {
             String key = foodBanner.getKey();
 
             threadWorker.execute(new Runnable() {
@@ -119,7 +119,7 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        this.rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, btnClickableCallback);
+        this.rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, btnClickableCallback, this.loginUserName);
 
         this.rvHolderSearch = view.findViewById(R.id.rv_search_holder);
         this.rvHolderSearch.setAdapter(this.rvAdapterFoodBanner);

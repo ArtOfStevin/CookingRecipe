@@ -80,7 +80,7 @@ public class VMUserLoginRepository extends AndroidViewModel {
         intent.putExtra("login_email", email);
         intent.putExtra("login_avatar", avatar);
 
-        SessionManagementUtil.getInstance().startUserSession(this.context, 5);
+        SessionManagementUtil.getInstance().startUserSession(this.context, 20);
         this.context.startActivity(intent);
     }
 
