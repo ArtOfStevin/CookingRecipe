@@ -9,7 +9,7 @@
         android:id="@+id/tvDifficulty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
+        android:layout_marginStart="120dp"
         android:layout_marginTop="32dp"
         android:text="Difficulty"
         app:layout_constraintStart_toEndOf="@+id/tvTimeNeeded"
@@ -19,7 +19,7 @@
         android:id="@+id/tvServePortion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
+        android:layout_marginStart="42dp"
         android:layout_marginTop="32dp"
         android:text="Portion"
         app:layout_constraintStart_toEndOf="@+id/tvTimeNeeded"
@@ -29,6 +29,7 @@
         android:id="@+id/tvTimeNeeded"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:text="Time"
         app:layout_constraintStart_toStartOf="@+id/tvSummary"
@@ -50,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="Summary"
-        app:layout_constraintStart_toStartOf="@+id/tvTitle"
+        app:layout_constraintStart_toStartOf="@+id/ivFoodPicture"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <TextView
@@ -60,17 +61,59 @@
         android:layout_marginTop="20dp"
         android:text="Title"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/ivFoodPicture"
-        app:layout_constraintTop_toBottomOf="@+id/ivFoodPicture" />
+        app:layout_constraintStart_toEndOf="@+id/lineVUserDetailStart"
+        app:layout_constraintTop_toBottomOf="@+id/ivFoodPicture"
+        app:layout_constraintEnd_toStartOf="@id/lineVUserDetailEnd" />
 
-    <Button
-        android:id="@+id/btnFavorite"
-        android:layout_width="127dp"
-        android:layout_height="38dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/white"
-        android:text="Fav"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/ivFoodPicture"
-        app:layout_constraintTop_toBottomOf="@id/tvDifficulty" />
+    <ImageButton
+        android:id="@+id/ibFavorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:src="@drawable/ic_baseline_favorite_border_black"
+        app:layout_constraintTop_toTopOf="@id/tvDifficulty"
+        app:layout_constraintEnd_toEndOf="@+id/ivFoodPicture">
+
+    </ImageButton>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/lineVUserDetailEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="61dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/lineVUserDetailStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="67dp" />
+
+    <ImageView
+        android:id="@+id/ivLogoTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/tvTimeNeeded"
+        app:layout_constraintTop_toTopOf="@id/tvTimeNeeded"
+        android:src="@drawable/ic_baseline_access_time_black"
+        android:layout_marginRight="3dp"></ImageView>
+
+    <ImageView
+        android:id="@+id/ivLogoPortion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/tvServePortion"
+        app:layout_constraintTop_toTopOf="@id/tvTimeNeeded"
+        android:src="@drawable/ic_baseline_fastfood_black"
+        android:layout_marginRight="3dp"></ImageView>
+
+    <ImageView
+        android:id="@+id/ivLogoDifficulty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/tvDifficulty"
+        app:layout_constraintTop_toTopOf="@id/tvTimeNeeded"
+        android:src="@drawable/ic_baseline_psychology_black"
+        android:layout_marginRight="3dp"></ImageView>
 </androidx.constraintlayout.widget.ConstraintLayout>

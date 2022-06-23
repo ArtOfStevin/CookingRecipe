@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.database.entity.FoodBanner;
@@ -53,7 +54,7 @@ public class SearchFragment extends Fragment {
 
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {
         @Override
-        public void onClick(View view, FoodBanner foodBanner, int position, Button button) {
+        public void onClick(View view, FoodBanner foodBanner, int position) {
             String key = foodBanner.getKey();
 
             threadWorker.execute(new Runnable() {
@@ -67,14 +68,14 @@ public class SearchFragment extends Fragment {
                     else{
                         vmFoodBannerFavoriteRepository.insertFavorite(key, loginUserName);
                     }
-                    changeFavoriteButton(isExist, position, button);
+                    changeFavoriteButton(isExist, position);
                 }
             });
 
         }
     };
 
-    public void changeFavoriteButton(boolean isExist, int position, Button button){
+    public void changeFavoriteButton(boolean isExist, int position){
         mainThread.post(new Runnable() {
             @Override
             public void run() {

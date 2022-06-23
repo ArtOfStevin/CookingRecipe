@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 
 import com.example.cookingrecipes.R;
@@ -53,7 +54,7 @@ public class HomeFragment extends Fragment {
 
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {
         @Override
-        public void onClick(View view, FoodBanner foodBanner, int position, Button button) {
+        public void onClick(View view, FoodBanner foodBanner, int position) {
             String key = foodBanner.getKey();
 
             threadWorker.execute(new Runnable() {
@@ -67,20 +68,19 @@ public class HomeFragment extends Fragment {
                     else{
                         vmFoodBannerFavoriteRepository.insertFavorite(key, loginUserName);
                     }
-                    changeFavoriteButton(isExist, position, button);
+                    changeFavoriteButton(isExist, position);
                 }
             });
 
         }
     };
 
-    public void changeFavoriteButton(boolean isExist, int position, Button button){
+    public void changeFavoriteButton(boolean isExist, int position){
         mainThread.post(new Runnable() {
             @Override
             public void run() {
                 FoodBanner foodBanner = foodBannerList.get(position);
                 if(isExist){
-//                    button.setBackgroundColor(getResources().getColor(R.color.white));
                     foodBanner.setFavorite(false);
                 }
                 else{
