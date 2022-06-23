@@ -1,6 +1,8 @@
 package com.example.cookingrecipes.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,6 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +24,11 @@ import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.activity.LoginActivity;
 import com.example.cookingrecipes.logic.SessionManagementUtil;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
+
+import java.io.InputStream;
+import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,10 +45,14 @@ public class UserDetailFragment extends Fragment {
     private ImageView ivPhotoProfile;
     private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
 
+    private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
+    private Handler mainThread;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.vmFoodBannerRepositoryBridge = new ViewModelProvider(requireActivity()).get(VMFoodBannerRepositoryBridge.class);
+        this.mainThread = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -69,6 +83,31 @@ public class UserDetailFragment extends Fragment {
         this.tvUsernameCenter.setText(loginFullName);
         this.tvUsername.setText(loginUserName);
         this.tvEmail.setText(loginEmail);
+
+        // Thread Worker untuk narik gambar (Stream) dari internetnya
+        threadWorker.execute(new Runnable() {
+            @Override
+            public void run() {
+                try{
+                    String url = loginAvatar;
+                    System.out.println("URL: "+loginAvatar);
+                    url = "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80";
+                    InputStream inputStream = new URL(url).openStream();
+                    Bitmap bm = BitmapFactory.decodeStream(inputStream);
+
+                    // Untuk ubah UI aja
+                    mainThread.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ivPhotoProfile.setImageBitmap(bm);
+                        }
+                    });
+                }
+                catch(Exception e){
+                    Log.wtf("IMAGELOG", "onBindViewHolder: " + e);
+                }
+            }
+        });
 
         inquiryByUsername(loginUserName);
     }

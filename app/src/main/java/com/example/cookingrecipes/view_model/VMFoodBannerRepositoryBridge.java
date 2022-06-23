@@ -28,7 +28,7 @@ public class VMFoodBannerRepositoryBridge extends AndroidViewModel {
     private RetrofitInstance retrofitInstance;
     private FoodBannerDBRepository foodBannerDBRepository;
     private FoodApi foodApi;
-    public static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
+    private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
 
     public VMFoodBannerRepositoryBridge(@NonNull Application application){
         super(application);

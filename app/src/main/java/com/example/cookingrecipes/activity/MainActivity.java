@@ -3,11 +3,9 @@ package com.example.cookingrecipes.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.cookingrecipes.R;
@@ -25,7 +23,6 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
-    private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +38,6 @@ public class MainActivity extends AppCompatActivity {
         this.bottomNavigationView = findViewById(R.id.bottomNavViewHolder);
         initBottomNavigationView();
 
-        this.vmFoodBannerRepositoryBridge = new ViewModelProvider(this).get(VMFoodBannerRepositoryBridge.class);
-        vmFoodBannerRepositoryBridge.injectApiDataToDB();
     }
 
     @Override
