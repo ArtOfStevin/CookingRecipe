@@ -66,7 +66,7 @@ public class VMUserLoginRepository extends AndroidViewModel {
 
             @Override
             public void onFailure(Call<ResponseFromUserApi> call, Throwable t) {
-                Log.d("loginApi.getUserDetail.onFailure","Gagal");
+                Log.d("loginApi.getUserDetail.onFailure","Koneksi Gagal");
             }
         });
 

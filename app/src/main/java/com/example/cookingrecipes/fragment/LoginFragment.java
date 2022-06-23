@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cookingrecipes.R;
-import com.example.cookingrecipes.logic.VerifyUser;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 import com.example.cookingrecipes.view_model.VMUserLoginRepository;
 
@@ -29,12 +28,9 @@ public class LoginFragment extends Fragment {
 
     private EditText etUsername;
     private EditText etPassword;
-    private Button btnSignUp;
     private Button btnLogin;
     private ImageView ivLoginPicture;
-    private TextView tvInvalidUser;
 
-    private VerifyUser verifyUser;
     private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
     private VMUserLoginRepository vmUserLoginRepository;
 
@@ -46,7 +42,6 @@ public class LoginFragment extends Fragment {
         this.vmUserLoginRepository = new ViewModelProvider(requireActivity()).get(VMUserLoginRepository.class);
         this.vmUserLoginRepository.setContext(requireContext());
 
-        this.verifyUser = new VerifyUser();
     }
 
     @Override
@@ -58,10 +53,8 @@ public class LoginFragment extends Fragment {
         // Init UI
         this.etUsername = fragmentView.findViewById(R.id.etUsername);
         this.etPassword = fragmentView.findViewById(R.id.etPassword);
-        this.btnSignUp = fragmentView.findViewById(R.id.btnSignUp);
         this.btnLogin = fragmentView.findViewById(R.id.btnLogin);
         this.ivLoginPicture = fragmentView.findViewById(R.id.ivLoginPicture);
-        this.tvInvalidUser = fragmentView.findViewById(R.id.tvInvalidUser);
 
         return fragmentView;
     }
@@ -88,9 +81,5 @@ public class LoginFragment extends Fragment {
             }
         });
 
-    }
-
-    private void clearFoodTable(){
-        this.vmFoodBannerRepositoryBridge.clearTable();
     }
 }

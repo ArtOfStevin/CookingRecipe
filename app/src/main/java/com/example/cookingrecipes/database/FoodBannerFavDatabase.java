@@ -11,31 +11,31 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
 import com.example.cookingrecipes.database.entity.FoodBanner;
+import com.example.cookingrecipes.database.entity.FoodBannerFavorite;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {FoodBanner.class}, version = 1, exportSchema = true)
-public abstract class FoodBannerDatabase extends RoomDatabase {
+@Database(entities = {FoodBannerFavorite.class}, version = 1, exportSchema = true)
+public abstract class FoodBannerFavDatabase extends RoomDatabase {
 
-    // foodBannerDao() default by java utk get object FoodBannerDao
-    public abstract FoodBannerDao foodBannerDao();
+    public abstract FoodBannerFavDao foodBannerFavDao();
 
     // Implementasi Singleton
     // (instancenya DBnya 1/akses memorinya 1 aja/biar DB nya ga banyak, ga race condition)
-    public static volatile FoodBannerDatabase INSTANCE;
+    public static volatile FoodBannerFavDatabase INSTANCE;
 
     public static final int NUMBER_OF_THREADS = 4;
     public static final ExecutorService databaseWorker = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    public static FoodBannerDatabase getDatabase(final Context context){
+    public static FoodBannerFavDatabase getDatabase(final Context context){
         if(INSTANCE == null){
             // synchronize > lock kelasnya
-            synchronized (FoodBannerDatabase.class){
+            synchronized (FoodBannerFavDatabase.class){
                 // Sesudah di lock di pastikan masih blm ada yang buat instancenya
                 if(INSTANCE == null){
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext()
-                            , FoodBannerDatabase.class, "database_cooking_recipe"
+                            , FoodBannerFavDatabase.class, "database_fav_cooking_recipe"
                             ).build();
                 }
             }

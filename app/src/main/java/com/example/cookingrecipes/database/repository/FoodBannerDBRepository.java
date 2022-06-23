@@ -14,18 +14,21 @@ public class FoodBannerDBRepository {
 
     private FoodBannerDao foodBannerDao;
     private LiveData<List<FoodBanner>> foodBannerList;
-    private boolean stillProcessing;
 
     public FoodBannerDBRepository(Application application){
         FoodBannerDatabase database = FoodBannerDatabase.getDatabase(application);
         this.foodBannerDao = database.foodBannerDao();
         this.foodBannerList = this.foodBannerDao.getAll();
-        this.stillProcessing = false;
     }
 
     public LiveData<List<FoodBanner>> getAllFoodBanner(){
         // Untuk get data ga perlu pake thread worker karena udah di handle LiveData
         return this.foodBannerList;
+    }
+
+    public LiveData<List<FoodBanner>> search(String query){
+        // Untuk get data ga perlu pake thread worker karena udah di handle LiveData
+        return this.foodBannerDao.search(query);
     }
 
     // Takutnya masukin data lebih dari 5 detik karena DB penuh
@@ -56,33 +59,19 @@ public class FoodBannerDBRepository {
         });
     }
 
-    public void lockDb(){
-        this.stillProcessing = true;
-    }
-
-    public void releaseDb(){
-        this.stillProcessing = false;
-    }
-
     public void insertAll(List<FoodBanner> foodBannerList){
 
         FoodBannerDatabase.databaseWorker.execute(new Runnable() {
             @Override
             public void run() {
-                lockDb();
                 for (int i = 0; i < foodBannerList.size(); i++) {
                     foodBannerDao.insert(foodBannerList.get(i));
                 }
-                releaseDb();
             }
         });
     }
 
-    public boolean isLock(){
-        return this.stillProcessing;
-    }
-
-    public void clearFoodBannerTable(){
+    public void clearTable(){
         this.foodBannerDao.nukeTable();
     }
 }
