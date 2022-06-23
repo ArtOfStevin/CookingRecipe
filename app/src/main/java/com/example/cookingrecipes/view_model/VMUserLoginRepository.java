@@ -33,7 +33,7 @@ public class VMUserLoginRepository extends AndroidViewModel {
 
     private RetrofitInstance retrofitInstance;
     private LoginApi loginApi;
-    public static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
+    private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
     private Context context;
 
 

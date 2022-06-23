@@ -27,7 +27,7 @@ import java.util.concurrent.Executors;
 public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanner.ViewHolder>{
 
     private List<FoodBanner> foodBannerList;
-    public static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
+    private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
     private Handler mainThread;
 
     private BtnClickableCallback btnClickableCallback;

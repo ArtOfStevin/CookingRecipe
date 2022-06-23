@@ -41,7 +41,7 @@ public class LoginFragment extends Fragment {
         this.vmFoodBannerRepositoryBridge = new ViewModelProvider(requireActivity()).get(VMFoodBannerRepositoryBridge.class);
         this.vmUserLoginRepository = new ViewModelProvider(requireActivity()).get(VMUserLoginRepository.class);
         this.vmUserLoginRepository.setContext(requireContext());
-
+        vmFoodBannerRepositoryBridge.clearTable();
     }
 
     @Override
@@ -62,9 +62,9 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.ivLoginPicture.setImageResource(R.drawable.ribbon);
+        this.ivLoginPicture.setImageResource(R.drawable.banner);
 
-        vmFoodBannerRepositoryBridge.clearTable();
+        vmFoodBannerRepositoryBridge.injectApiDataToDB();
         this.initOnClick();
     }
 
