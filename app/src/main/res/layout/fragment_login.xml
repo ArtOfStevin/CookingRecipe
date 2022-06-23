@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="tvInvalidUser"
+        app:constraint_referenced_ids="etPassword"
         tools:layout_editor_absoluteY="236dp" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -92,10 +92,9 @@
 
     <ImageView
         android:id="@+id/ivLoginPicture"
-        android:layout_width="313dp"
+        android:layout_width="match_parent"
         android:layout_height="270dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />

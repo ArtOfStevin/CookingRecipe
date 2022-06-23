@@ -62,7 +62,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        this.ivLoginPicture.setImageResource(R.drawable.ribbon);
+        this.ivLoginPicture.setImageResource(R.drawable.banner);
 
         vmFoodBannerRepositoryBridge.injectApiDataToDB();
         this.initOnClick();
