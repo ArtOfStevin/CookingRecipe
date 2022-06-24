@@ -18,8 +18,8 @@ public class FoodBannerFavDBRepository {
         this.foodBannerFavDao = database.foodBannerFavDao();
     }
 
-    public List<FoodBannerFavorite> getAll(){
-        return this.foodBannerFavDao.getAllFavorite();
+    public List<FoodBannerFavorite> getAllByUser(String username){
+        return this.foodBannerFavDao.findAllByUsername(username);
     }
 
     // Takutnya masukin data lebih dari 5 detik karena DB penuh

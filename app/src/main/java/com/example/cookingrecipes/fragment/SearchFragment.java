@@ -57,7 +57,7 @@ public class SearchFragment extends Fragment {
     private Handler mainThread;
 
     private SharedPreferenceManager sharedPreferenceManager;
-    public AlertDialog.Builder alertDialogBuilder;
+    private AlertDialog.Builder alertDialogBuilder;
 
     // ----------------------------------------------------------------- Favorite Click Button Feedback -----------------------------------------------
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {

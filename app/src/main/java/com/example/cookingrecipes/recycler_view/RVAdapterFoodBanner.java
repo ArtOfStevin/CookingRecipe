@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class RVAdapterFoodBannerHome extends RecyclerView.Adapter<RVAdapterFoodBannerHome.ViewHolder>{
+public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanner.ViewHolder>{
 
     private List<FoodBanner> foodBannerList;
     private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
@@ -35,7 +35,7 @@ public class RVAdapterFoodBannerHome extends RecyclerView.Adapter<RVAdapterFoodB
     private int nightModeFlags;
     private String username;
 
-    public RVAdapterFoodBannerHome(List<FoodBanner> foodBannerList, @NonNull BtnClickableCallback btnClickableCallback, String username){
+    public RVAdapterFoodBanner(List<FoodBanner> foodBannerList, @NonNull BtnClickableCallback btnClickableCallback, String username){
         this.foodBannerList = foodBannerList;
         this.mainThread = new Handler(Looper.getMainLooper());
         this.btnClickableCallback = btnClickableCallback;
@@ -49,7 +49,7 @@ public class RVAdapterFoodBannerHome extends RecyclerView.Adapter<RVAdapterFoodB
         this.nightModeFlags =
                 parent.getContext().getResources().getConfiguration().uiMode &
                         Configuration.UI_MODE_NIGHT_MASK;
-        return new RVAdapterFoodBannerHome.ViewHolder(view);
+        return new RVAdapterFoodBanner.ViewHolder(view);
     }
 
     @Override

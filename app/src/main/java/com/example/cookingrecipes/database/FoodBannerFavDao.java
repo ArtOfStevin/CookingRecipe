@@ -16,7 +16,10 @@ import java.util.List;
 public interface FoodBannerFavDao {
 
     @Query("SELECT * FROM FoodBannerFavorite")
-    List<FoodBannerFavorite> getAllFavorite();
+    List<FoodBannerFavorite> getAll();
+
+    @Query("SELECT * FROM FoodBannerFavorite WHERE username LIKE :username")
+    List<FoodBannerFavorite> findAllByUsername(String username);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(FoodBannerFavorite foodBannerFavorite);
