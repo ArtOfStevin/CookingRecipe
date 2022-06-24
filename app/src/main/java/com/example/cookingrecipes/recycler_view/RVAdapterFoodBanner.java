@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.database.entity.FoodBanner;
+import com.example.cookingrecipes.fragment.HomeFragment;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -33,11 +34,13 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
 
     private BtnClickableCallback btnClickableCallback;
     private int nightModeFlags;
+    private String username;
 
-    public RVAdapterFoodBanner(List<FoodBanner> foodBannerList, @NonNull BtnClickableCallback btnClickableCallback){
+    public RVAdapterFoodBanner(List<FoodBanner> foodBannerList, @NonNull BtnClickableCallback btnClickableCallback, String username){
         this.foodBannerList = foodBannerList;
         this.mainThread = new Handler(Looper.getMainLooper());
         this.btnClickableCallback = btnClickableCallback;
+        this.username = username;
     }
 
     @NonNull
@@ -54,7 +57,6 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FoodBanner foodBanner = foodBannerList.get(position);
         holder.tvTitle.setText(foodBanner.getTitle());
-        holder.tvSummary.setText(foodBanner.getSummary());
 
         holder.tvTimeNeeded.setText(foodBanner.getTimeNeeded());
         holder.tvServePortion.setText(foodBanner.getServePortion());
@@ -116,7 +118,6 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         TextView tvTitle;
-        TextView tvSummary;
 
         TextView tvTimeNeeded;
         TextView tvServePortion;
@@ -134,7 +135,6 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
             super(itemView);
 
             tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvSummary = itemView.findViewById(R.id.tvSummary);
 
             tvTimeNeeded = itemView.findViewById(R.id.tvTimeNeeded);
             tvServePortion = itemView.findViewById(R.id.tvServePortion);
@@ -159,7 +159,7 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
 
                     if(postition != RecyclerView.NO_POSITION) { // Check if on item was deleted
                         FoodBanner foodBanner = foodBannerList.get(postition);
-                        btnClickableCallback.onClick(v, foodBanner, postition);
+                        btnClickableCallback.onClick(v, foodBanner, postition, true);
                     }
                 }
             });
@@ -168,6 +168,12 @@ public class RVAdapterFoodBanner extends RecyclerView.Adapter<RVAdapterFoodBanne
         @Override
         public void onClick(View v) {
             // Callback disini kalau mau on click ketika 1 foodbanner di click
+            int postition = getAdapterPosition();
+
+            if(postition != RecyclerView.NO_POSITION) { // Check if on item was deleted
+                FoodBanner foodBanner = foodBannerList.get(postition);
+                btnClickableCallback.onClick(v, foodBanner, postition, false);
+            }
         }
     }
 }

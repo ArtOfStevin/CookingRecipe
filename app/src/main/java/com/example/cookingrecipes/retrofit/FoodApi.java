@@ -1,12 +1,11 @@
 package com.example.cookingrecipes.retrofit;
 
-import com.example.cookingrecipes.model.FoodBannerFromApi;
 import com.example.cookingrecipes.model.ResponseFromFoodApi;
-
-import java.util.List;
+import com.example.cookingrecipes.model.ResponseFromFoodDetailApi;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 
 public interface FoodApi {
 
@@ -14,4 +13,7 @@ public interface FoodApi {
 
     @GET("/api/recipes")
     Call<ResponseFromFoodApi> getNewRecipes();
+
+    @GET("/api/recipe/{key}")
+    Call<ResponseFromFoodDetailApi> getDetailRecipes(@Path("key") String key);
 }

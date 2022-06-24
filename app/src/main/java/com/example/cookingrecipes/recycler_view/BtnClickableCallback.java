@@ -8,5 +8,5 @@ import com.example.cookingrecipes.database.entity.FoodBanner;
 
 public interface BtnClickableCallback {
 
-    void onClick(View view, FoodBanner foodBanner, int position);
+    void onClick(View view, FoodBanner foodBanner, int position, boolean isButton);
 }
