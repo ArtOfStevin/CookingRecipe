@@ -2,6 +2,7 @@ package com.example.cookingrecipes.fragment;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -21,6 +22,8 @@ import android.view.ViewGroup;
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.activity.DetailActivity;
 import com.example.cookingrecipes.database.entity.FoodBanner;
+import com.example.cookingrecipes.database.entity.FoodBannerFavorite;
+import com.example.cookingrecipes.logic.SharedPreferenceManager;
 import com.example.cookingrecipes.recycler_view.BtnClickableCallback;
 import com.example.cookingrecipes.view_model.VMFoodBannerFavoriteRepository;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
@@ -39,6 +42,7 @@ import java.util.concurrent.Executors;
 public class HomeFragment extends Fragment {
 
     private List<FoodBanner> foodBannerList = new ArrayList<>();
+    private List<FoodBannerFavorite> foodBannerFavList = new ArrayList<>();
     private RVAdapterFoodBannerHome rvAdapterFoodBannerHome;
     private RecyclerView rvHolderHome;
     private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
@@ -49,13 +53,13 @@ public class HomeFragment extends Fragment {
     private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
     private Handler mainThread;
 
-    public static final String LOGIN_PREFERENCE = "com.example.cookingrecipes.LOGIN_PREFERENCE";
-
+    private SharedPreferenceManager sharedPreferenceManager;
     public AlertDialog.Builder alertDialogBuilder;
 
     // Loading Animation
 //    private ProgressBar progressBar;
 
+    // ----------------------------------------------------------------- Favorite Click Button Feedback -----------------------------------------------
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {
         @Override
         public void onClick(View view, FoodBanner foodBanner, int position, boolean isButton) {
@@ -65,14 +69,31 @@ public class HomeFragment extends Fragment {
                 threadWorker.execute(new Runnable() {
                     @Override
                     public void run() {
-                        boolean isExist = vmFoodBannerFavoriteRepository.isExist(key, loginUserName);
+                        boolean isFavorite = vmFoodBannerFavoriteRepository.isExist(key, loginUserName);
 
-                        if (isExist) {
-                            vmFoodBannerFavoriteRepository.deleteFavorite(key, loginUserName);
-                        } else {
-                            vmFoodBannerFavoriteRepository.insertFavorite(key, loginUserName);
-                        }
-                        changeFavoriteButton(isExist, position);
+                        mainThread.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isFavorite) {
+                                    alertDialogBuilder.setTitle("Are you sure to unliked ?")
+                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    setFavoriteButton(false, position);
+                                                    vmFoodBannerFavoriteRepository.deleteFavorite(key, loginUserName);
+                                                }
+                                            })
+                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                }
+                                            }).show();
+                                } else {
+                                    setFavoriteButton(true, position);
+                                    vmFoodBannerFavoriteRepository.insertFavorite(key, loginUserName);
+                                }
+                            }
+                        });
                     }
                 });
             }
@@ -83,30 +104,22 @@ public class HomeFragment extends Fragment {
         }
     };
 
-    public void changeToDetailFragment(String key, String username){
-        Intent intent = new Intent(requireContext(), DetailActivity.class);
-        intent.putExtra("login_username", username);
-        intent.putExtra("food_banner_key", key);
+    public void setFavoriteButton(boolean isFavorite, int position){
+        FoodBanner foodBanner = foodBannerList.get(position);
+        foodBanner.setFavorite(isFavorite);
+        foodBannerList.set(position, foodBanner);
+        rvAdapterFoodBannerHome.notifyDataSetChanged();
+    }
 
+    public void changeToDetailFragment(String key, String username){
+        sharedPreferenceManager.getEditor().putString("login_username", username);
+        sharedPreferenceManager.getEditor().putString("food_banner_key", key);
+        sharedPreferenceManager.getEditor().apply();
+
+        Intent intent = new Intent(requireContext(), DetailActivity.class);
         startActivity(intent);
     }
-
-    public void changeFavoriteButton(boolean isExist, int position){
-        mainThread.post(new Runnable() {
-            @Override
-            public void run() {
-                FoodBanner foodBanner = foodBannerList.get(position);
-                if(isExist){
-                    foodBanner.setFavorite(false);
-                }
-                else{
-                    foodBanner.setFavorite(true);
-                }
-                foodBannerList.set(position, foodBanner);
-                rvAdapterFoodBannerHome.notifyDataSetChanged();
-            }
-        });
-    }
+    // ----------------------------------------------------------------- Favorite Click Button Feedback -----------------------------------------------
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,6 +127,10 @@ public class HomeFragment extends Fragment {
         this.vmFoodBannerRepositoryBridge = new ViewModelProvider(requireActivity()).get(VMFoodBannerRepositoryBridge.class);
         this.vmFoodBannerFavoriteRepository = new ViewModelProvider(requireActivity()).get(VMFoodBannerFavoriteRepository.class);
         this.mainThread = new Handler(Looper.getMainLooper());
+
+        this.sharedPreferenceManager = new SharedPreferenceManager(requireContext());
+        this.loginUserName = this.sharedPreferenceManager.readString("login_username");
+        this.alertDialogBuilder = new AlertDialog.Builder(requireContext());
     }
 
     @Override
@@ -121,12 +138,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_home, container, false);
-
-        this.rvHolderHome = fragmentView.findViewById(R.id.rv_home_holder);
 //        this.progressBar = fragmentView.findViewById(R.id.loadingHomeAnimation);
-        this.loginUserName = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
-                .getString("login_username", "");
-        this.alertDialogBuilder = new AlertDialog.Builder(requireContext());
 
         return fragmentView;
     }
@@ -136,10 +148,10 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        rvAdapterFoodBannerHome = new RVAdapterFoodBannerHome(this.foodBannerList, btnClickableCallback, this.loginUserName);
-
-        rvHolderHome.setAdapter(rvAdapterFoodBannerHome);
-        rvHolderHome.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        this.rvAdapterFoodBannerHome = new RVAdapterFoodBannerHome(this.foodBannerList, btnClickableCallback, this.loginUserName);
+        this.rvHolderHome = view.findViewById(R.id.rv_home_holder);
+        this.rvHolderHome.setAdapter(rvAdapterFoodBannerHome);
+        this.rvHolderHome.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         initLoadDB();
     }

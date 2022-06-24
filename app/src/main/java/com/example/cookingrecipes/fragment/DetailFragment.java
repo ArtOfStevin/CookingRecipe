@@ -1,5 +1,7 @@
 package com.example.cookingrecipes.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,17 +20,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cookingrecipes.R;
+import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.logic.DetailFragmentHelper;
+import com.example.cookingrecipes.logic.SharedPreferenceManager;
 import com.example.cookingrecipes.model.FoodDetailAdapterData;
 import com.example.cookingrecipes.model.FoodDetailFromApi;
 import com.example.cookingrecipes.model.ResponseFromFoodDetailApi;
 import com.example.cookingrecipes.recycler_view.RVAdapterFoodDetail;
 import com.example.cookingrecipes.retrofit.FoodApi;
 import com.example.cookingrecipes.retrofit.RetrofitInstance;
+import com.example.cookingrecipes.view_model.VMFoodBannerFavoriteRepository;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -60,6 +67,8 @@ public class DetailFragment extends Fragment {
     private ImageView ivDetailLogoPortion;
     private ImageView ivDetailLogoDifficulty;
 
+    private ImageButton ibDetailFavorite;
+
     private String loginUserName="";
     private String foodBannerKey="";
 
@@ -76,6 +85,10 @@ public class DetailFragment extends Fragment {
     private DetailFragmentHelper detailFragmentHelper;
     private RecyclerView rvHolderDetail;
 
+    private SharedPreferenceManager sharedPreferenceManager;
+    private VMFoodBannerFavoriteRepository vmFoodBannerFavoriteRepository;
+    private AlertDialog.Builder alertDialogBuilder;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +99,10 @@ public class DetailFragment extends Fragment {
         this.mainThread = new Handler(Looper.getMainLooper());
         this.foodDetailAdapterDataList = new ArrayList<>();
         this.detailFragmentHelper = new DetailFragmentHelper();
+        this.sharedPreferenceManager = new SharedPreferenceManager(requireContext());
+
+        this.vmFoodBannerFavoriteRepository = new ViewModelProvider(requireActivity()).get(VMFoodBannerFavoriteRepository.class);
+        this.alertDialogBuilder = new AlertDialog.Builder(requireContext());
     }
 
     @Override
@@ -110,9 +127,11 @@ public class DetailFragment extends Fragment {
         this.ivDetailLogoTime = fragmentView.findViewById(R.id.ivDetailLogoTime);
         this.ivDetailLogoPortion = fragmentView.findViewById(R.id.ivDetailLogoPortion);
         this.ivDetailLogoDifficulty = fragmentView.findViewById(R.id.ivDetailLogoDifficulty);
+        this.ibDetailFavorite = fragmentView.findViewById(R.id.ibDetailFavorite);
 
-        this.loginUserName = requireActivity().getIntent().getStringExtra("login_username");
-        this.foodBannerKey = requireActivity().getIntent().getStringExtra("food_banner_key");
+        this.loginUserName = this.sharedPreferenceManager.readString("login_username");
+        this.foodBannerKey = this.sharedPreferenceManager.readString("food_banner_key");
+
         this.rvHolderDetail = fragmentView.findViewById(R.id.rv_detail_holder);
 
         return fragmentView;
@@ -126,10 +145,12 @@ public class DetailFragment extends Fragment {
         rvHolderDetail.setAdapter(rvAdapterFoodDetail);
         rvHolderDetail.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        this.getDataFromApi(foodBannerKey, loginUserName);
+        setOnClickImageButton();
+        getDataFromApi(foodBannerKey, loginUserName);
     }
 
     public void adjustWithTheme(int nightModeFlags){
+        initImageBtn();
         switch (nightModeFlags) {
             case Configuration.UI_MODE_NIGHT_YES:
                 ivDetailLogoTime.setImageResource(R.drawable.ic_baseline_access_time_white);
@@ -145,6 +166,72 @@ public class DetailFragment extends Fragment {
 
             case Configuration.UI_MODE_NIGHT_UNDEFINED:
                 break;
+        }
+    }
+
+    public void initImageBtn(){
+        threadWorker.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean isFav = vmFoodBannerFavoriteRepository.isExist(foodBannerKey, loginUserName);
+                if (!isFav)
+                    if(nightModeFlags == Configuration.UI_MODE_NIGHT_YES) ibDetailFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_white);
+                    else ibDetailFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_black);
+                else
+                    ibDetailFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
+            }
+        });
+    }
+
+    public void setOnClickImageButton(){
+        this.ibDetailFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                threadWorker.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean isFavorite = vmFoodBannerFavoriteRepository.isExist(foodBannerKey, loginUserName);
+
+                        mainThread.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isFavorite) {
+                                    alertDialogBuilder.setTitle("Are you sure to unliked ?")
+                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    setFavoriteButton(false);
+                                                    vmFoodBannerFavoriteRepository.deleteFavorite(foodBannerKey, loginUserName);
+                                                }
+                                            })
+                                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                }
+                                            }).show();
+                                } else {
+                                    setFavoriteButton(true);
+                                    vmFoodBannerFavoriteRepository.insertFavorite(foodBannerKey, loginUserName);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    public void setFavoriteButton(boolean isFavorite){
+        if (!isFavorite) {
+            if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES)
+                ibDetailFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_white);
+            else
+                ibDetailFavorite.setImageResource(R.drawable.ic_baseline_favorite_border_black);
+            vmFoodBannerFavoriteRepository.deleteFavorite(foodBannerKey, loginUserName);
+        }
+        else{
+            ibDetailFavorite.setImageResource(R.drawable.ic_baseline_favorite_24);
+            vmFoodBannerFavoriteRepository.insertFavorite(foodBannerKey, loginUserName);
         }
     }
 
