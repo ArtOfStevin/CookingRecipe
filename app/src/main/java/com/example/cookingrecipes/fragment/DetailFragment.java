@@ -25,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cookingrecipes.R;
-import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.logic.DetailFragmentHelper;
 import com.example.cookingrecipes.logic.SharedPreferenceManager;
 import com.example.cookingrecipes.model.FoodDetailAdapterData;

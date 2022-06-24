@@ -2,13 +2,9 @@ package com.example.cookingrecipes.database.repository;
 
 import android.app.Application;
 
-import androidx.lifecycle.LiveData;
-
-import com.example.cookingrecipes.database.FoodBannerDao;
 import com.example.cookingrecipes.database.FoodBannerDatabase;
 import com.example.cookingrecipes.database.FoodBannerFavDao;
 import com.example.cookingrecipes.database.FoodBannerFavDatabase;
-import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.database.entity.FoodBannerFavorite;
 
 import java.util.List;

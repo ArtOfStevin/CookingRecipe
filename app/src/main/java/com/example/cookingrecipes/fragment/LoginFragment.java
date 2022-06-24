@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;

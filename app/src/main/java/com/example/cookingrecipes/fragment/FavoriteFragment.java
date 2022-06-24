@@ -1,7 +1,6 @@
 package com.example.cookingrecipes.fragment;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.logic.SharedPreferenceManager;
 import com.example.cookingrecipes.recycler_view.BtnClickableCallback;
 import com.example.cookingrecipes.recycler_view.RVAdapterFoodBannerFavorite;
-import com.example.cookingrecipes.recycler_view.RVAdapterFoodBannerHome;
 import com.example.cookingrecipes.view_model.VMFoodBannerFavoriteRepository;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 
