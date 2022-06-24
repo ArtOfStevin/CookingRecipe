@@ -26,7 +26,7 @@ import com.example.cookingrecipes.activity.DetailActivity;
 import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.logic.SharedPreferenceManager;
 import com.example.cookingrecipes.recycler_view.BtnClickableCallback;
-import com.example.cookingrecipes.recycler_view.RVAdapterFoodBannerSearch;
+import com.example.cookingrecipes.recycler_view.RVAdapterFoodBanner;
 import com.example.cookingrecipes.view_model.VMFoodBannerFavoriteRepository;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 
@@ -43,7 +43,7 @@ import java.util.concurrent.Executors;
 public class SearchFragment extends Fragment {
 
     private List<FoodBanner> foodBannerList = new ArrayList<>();
-    private RVAdapterFoodBannerSearch rvAdapterFoodBannerSearch;
+    private RVAdapterFoodBanner rvAdapterFoodBanner;
     private RecyclerView rvHolderSearch;
 
     private Button btnSearch;
@@ -57,7 +57,7 @@ public class SearchFragment extends Fragment {
     private Handler mainThread;
 
     private SharedPreferenceManager sharedPreferenceManager;
-    public AlertDialog.Builder alertDialogBuilder;
+    private AlertDialog.Builder alertDialogBuilder;
 
     // ----------------------------------------------------------------- Favorite Click Button Feedback -----------------------------------------------
     BtnClickableCallback btnClickableCallback = new BtnClickableCallback() {
@@ -108,7 +108,7 @@ public class SearchFragment extends Fragment {
         FoodBanner foodBanner = foodBannerList.get(position);
         foodBanner.setFavorite(isFavorite);
         foodBannerList.set(position, foodBanner);
-        rvAdapterFoodBannerSearch.notifyDataSetChanged();
+        rvAdapterFoodBanner.notifyDataSetChanged();
     }
 
     public void changeToDetailFragment(String key, String username){
@@ -149,9 +149,9 @@ public class SearchFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        this.rvAdapterFoodBannerSearch = new RVAdapterFoodBannerSearch(this.foodBannerList, btnClickableCallback, this.loginUserName);
+        this.rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, btnClickableCallback, this.loginUserName);
         this.rvHolderSearch = view.findViewById(R.id.rv_search_holder);
-        this.rvHolderSearch.setAdapter(this.rvAdapterFoodBannerSearch);
+        this.rvHolderSearch.setAdapter(this.rvAdapterFoodBanner);
         this.rvHolderSearch.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         initOnClick();
@@ -187,7 +187,7 @@ public class SearchFragment extends Fragment {
                 mainThread.post(new Runnable() {
                     @Override
                     public void run() {
-                        rvAdapterFoodBannerSearch.notifyDataSetChanged();
+                        rvAdapterFoodBanner.notifyDataSetChanged();
                     }
                 });
             }

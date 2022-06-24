@@ -22,11 +22,12 @@ import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.activity.DetailActivity;
 import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.database.entity.FoodBannerFavorite;
+import com.example.cookingrecipes.logic.FoodBannerHelper;
 import com.example.cookingrecipes.logic.SharedPreferenceManager;
 import com.example.cookingrecipes.recycler_view.BtnClickableCallback;
 import com.example.cookingrecipes.view_model.VMFoodBannerFavoriteRepository;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
-import com.example.cookingrecipes.recycler_view.RVAdapterFoodBannerHome;
+import com.example.cookingrecipes.recycler_view.RVAdapterFoodBanner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +42,7 @@ import java.util.concurrent.Executors;
 public class HomeFragment extends Fragment {
 
     private List<FoodBanner> foodBannerList = new ArrayList<>();
-    private List<FoodBannerFavorite> foodBannerFavList = new ArrayList<>();
-    private RVAdapterFoodBannerHome rvAdapterFoodBannerHome;
+    private RVAdapterFoodBanner rvAdapterFoodBanner;
     private RecyclerView rvHolderHome;
     private VMFoodBannerRepositoryBridge vmFoodBannerRepositoryBridge;
 
@@ -53,7 +53,8 @@ public class HomeFragment extends Fragment {
     private Handler mainThread;
 
     private SharedPreferenceManager sharedPreferenceManager;
-    public AlertDialog.Builder alertDialogBuilder;
+    private AlertDialog.Builder alertDialogBuilder;
+    private FoodBannerHelper foodBannerHelper;
 
     // Loading Animation
 //    private ProgressBar progressBar;
@@ -107,7 +108,7 @@ public class HomeFragment extends Fragment {
         FoodBanner foodBanner = foodBannerList.get(position);
         foodBanner.setFavorite(isFavorite);
         foodBannerList.set(position, foodBanner);
-        rvAdapterFoodBannerHome.notifyDataSetChanged();
+        rvAdapterFoodBanner.notifyDataSetChanged();
     }
 
     public void changeToDetailFragment(String key, String username){
@@ -130,6 +131,7 @@ public class HomeFragment extends Fragment {
         this.sharedPreferenceManager = new SharedPreferenceManager(requireContext());
         this.loginUserName = this.sharedPreferenceManager.readString("login_username");
         this.alertDialogBuilder = new AlertDialog.Builder(requireContext());
+        this.foodBannerHelper = new FoodBannerHelper();
     }
 
     @Override
@@ -147,9 +149,9 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Untuk set adapternya beserta datanya
-        this.rvAdapterFoodBannerHome = new RVAdapterFoodBannerHome(this.foodBannerList, btnClickableCallback, this.loginUserName);
+        this.rvAdapterFoodBanner = new RVAdapterFoodBanner(this.foodBannerList, btnClickableCallback, this.loginUserName);
         this.rvHolderHome = view.findViewById(R.id.rv_home_holder);
-        this.rvHolderHome.setAdapter(rvAdapterFoodBannerHome);
+        this.rvHolderHome.setAdapter(rvAdapterFoodBanner);
         this.rvHolderHome.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
         initLoadDB();
@@ -168,6 +170,7 @@ public class HomeFragment extends Fragment {
         threadWorker.execute(new Runnable() {
             @Override
             public void run() {
+
                 FoodBanner each;
                 for (int i = 0; i < list.size(); i++) {
                     each = list.get(i);
@@ -183,7 +186,7 @@ public class HomeFragment extends Fragment {
                 mainThread.post(new Runnable() {
                     @Override
                     public void run() {
-                        rvAdapterFoodBannerHome.notifyDataSetChanged();
+                        rvAdapterFoodBanner.notifyDataSetChanged();
                     }
                 });
             }

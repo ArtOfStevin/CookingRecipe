@@ -44,8 +44,8 @@ public class VMFoodBannerFavoriteRepository extends AndroidViewModel {
         return this.foodBannerFavDBRepository.isExist(key, username);
     }
 
-    public List<FoodBannerFavorite> getAll(){
-        return this.foodBannerFavDBRepository.getAll();
+    public List<FoodBannerFavorite> getAllByUser(String username){
+        return this.foodBannerFavDBRepository.getAllByUser(username);
     }
 
 }
