@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import com.example.cookingrecipes.database.entity.FoodBannerFavorite;
 import com.example.cookingrecipes.database.repository.FoodBannerFavDBRepository;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,6 +42,10 @@ public class VMFoodBannerFavoriteRepository extends AndroidViewModel {
 
     public boolean isExist(String key, String username){
         return this.foodBannerFavDBRepository.isExist(key, username);
+    }
+
+    public List<FoodBannerFavorite> getAll(){
+        return this.foodBannerFavDBRepository.getAll();
     }
 
 }

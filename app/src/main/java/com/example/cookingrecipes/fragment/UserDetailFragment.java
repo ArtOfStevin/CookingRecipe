@@ -1,6 +1,5 @@
 package com.example.cookingrecipes.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,6 +23,7 @@ import android.widget.TextView;
 import com.example.cookingrecipes.R;
 import com.example.cookingrecipes.activity.LoginActivity;
 import com.example.cookingrecipes.logic.SessionManagementUtil;
+import com.example.cookingrecipes.logic.SharedPreferenceManager;
 import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 
 import java.io.InputStream;
@@ -49,13 +49,14 @@ public class UserDetailFragment extends Fragment {
     private static final ExecutorService threadWorker = Executors.newFixedThreadPool(1);
     private Handler mainThread;
 
-    public static final String LOGIN_PREFERENCE = "com.example.cookingrecipes.LOGIN_PREFERENCE";
+    private SharedPreferenceManager sharedPreferenceManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.vmFoodBannerRepositoryBridge = new ViewModelProvider(requireActivity()).get(VMFoodBannerRepositoryBridge.class);
         this.mainThread = new Handler(Looper.getMainLooper());
+        this.sharedPreferenceManager = new SharedPreferenceManager(requireContext());
     }
 
     @Override
@@ -78,23 +79,15 @@ public class UserDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        String loginUserName = requireActivity().getIntent().getStringExtra("login_username");
-//        String loginFullName = requireActivity().getIntent().getStringExtra("login_fullname");
-//        String loginEmail = requireActivity().getIntent().getStringExtra("login_email");
-//        String loginAvatar = requireActivity().getIntent().getStringExtra("login_avatar");
-
-        String loginUserName = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
-                .getString("login_username", "");
-        String loginFullName = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
-                .getString("login_fullname", "");
-        String loginEmail = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
-                .getString("login_email", "");
-        String loginAvatar = requireContext().getSharedPreferences(LOGIN_PREFERENCE, Context.MODE_PRIVATE)
-                .getString("login_avatar", "");
+        String loginUserName = this.sharedPreferenceManager.readString("login_username");
+        String loginFullName = this.sharedPreferenceManager.readString("login_fullname");
+        String loginEmail = this.sharedPreferenceManager.readString("login_email");
+        String loginAvatar = this.sharedPreferenceManager.readString("login_avatar");
 
         this.tvUsernameCenter.setText(loginFullName);
         this.tvUsername.setText(loginUserName);
         this.tvEmail.setText(loginEmail);
+        this.ivPhotoProfile.setImageResource(R.drawable.ribbon);
 
         // Thread Worker untuk narik gambar (Stream) dari internetnya
         threadWorker.execute(new Runnable() {
@@ -102,7 +95,6 @@ public class UserDetailFragment extends Fragment {
             public void run() {
                 try{
                     String url = loginAvatar;
-                    System.out.println("URL: "+loginAvatar);
                     url = "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1480&q=80";
                     InputStream inputStream = new URL(url).openStream();
                     Bitmap bm = BitmapFactory.decodeStream(inputStream);
@@ -120,8 +112,6 @@ public class UserDetailFragment extends Fragment {
                 }
             }
         });
-
-        inquiryByUsername(loginUserName);
     }
 
     private void setBtnLogout(){
@@ -140,7 +130,4 @@ public class UserDetailFragment extends Fragment {
         startActivity(intent);
     }
 
-    private void inquiryByUsername(String username){
-        this.ivPhotoProfile.setImageResource(R.drawable.ribbon);
-    }
 }

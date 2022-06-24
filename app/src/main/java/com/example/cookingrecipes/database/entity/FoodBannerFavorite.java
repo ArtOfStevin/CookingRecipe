@@ -16,21 +16,6 @@ public class FoodBannerFavorite {
     @ColumnInfo(name = "username")
     private String username;
 
-//    @ColumnInfo(name = "title")
-//    private String title;
-//
-//    @ColumnInfo(name = "image_url")
-//    private String imageUrl;
-//
-//    @ColumnInfo(name = "time_needed")
-//    private String timeNeeded;
-//
-//    @ColumnInfo(name = "serve_portion")
-//    private String servePortion;
-//
-//    @ColumnInfo(name = "difficulty")
-//    private String difficulty;
-
     public String getKey() {
         return key;
     }
@@ -47,43 +32,4 @@ public class FoodBannerFavorite {
         this.username = username;
     }
 
-//    public String getTitle() {
-//        return title;
-//    }
-//
-//    public void setTitle(String title) {
-//        this.title = title;
-//    }
-//
-//    public String getImageUrl() {
-//        return imageUrl;
-//    }
-//
-//    public void setImageUrl(String imageUrl) {
-//        this.imageUrl = imageUrl;
-//    }
-//
-//    public String getTimeNeeded() {
-//        return timeNeeded;
-//    }
-//
-//    public void setTimeNeeded(String timeNeeded) {
-//        this.timeNeeded = timeNeeded;
-//    }
-//
-//    public String getServePortion() {
-//        return servePortion;
-//    }
-//
-//    public void setServePortion(String servePortion) {
-//        this.servePortion = servePortion;
-//    }
-//
-//    public String getDifficulty() {
-//        return difficulty;
-//    }
-//
-//    public void setDifficulty(String difficulty) {
-//        this.difficulty = difficulty;
-//    }
 }

@@ -10,7 +10,6 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteOpenHelper;
 
-import com.example.cookingrecipes.database.entity.FoodBanner;
 import com.example.cookingrecipes.database.entity.FoodBannerFavorite;
 
 import java.util.concurrent.ExecutorService;

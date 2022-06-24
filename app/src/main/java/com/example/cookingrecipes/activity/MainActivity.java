@@ -14,7 +14,6 @@ import com.example.cookingrecipes.fragment.HomeFragment;
 import com.example.cookingrecipes.fragment.SearchFragment;
 import com.example.cookingrecipes.fragment.UserDetailFragment;
 import com.example.cookingrecipes.logic.SessionManagementUtil;
-import com.example.cookingrecipes.view_model.VMFoodBannerRepositoryBridge;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
